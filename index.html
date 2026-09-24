@@ -1,0 +1,1586 @@
+<!DOCTYPE html>
+<html lang="en" id="html-root">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title data-en="Road Damage Detection — Model Version Comparison" data-th="การตรวจจับความเสียหายบนถนน — เปรียบเทียบเวอร์ชันโมเดล">Road Damage Detection — Model Version Comparison</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    /* ===== RESET & BASE ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0d1117;
+      --surface: #161b22;
+      --surface2: #1c2129;
+      --border: #30363d;
+      --accent: #58a6ff;
+      --accent2: #3fb950;
+      --warn: #f0883e;
+      --danger: #f85149;
+      --text: #e6edf3;
+      --text-muted: #7d8590;
+      --badge-v1: #6e7681;
+      --badge-v2: #388bfd;
+      --badge-v3: #a371f7;
+      --badge-v4: #f0883e;
+      --badge-v5: #3fb950;
+      --badge-v6: #f778ba;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Sarabun', 'Segoe UI', system-ui, sans-serif;
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    /* ===== LANGUAGE TOGGLE ===== */
+    .lang-toggle {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 40px;
+      padding: 4px;
+      gap: 4px;
+      box-shadow: 0 8px 32px rgba(0,0,0,.5);
+    }
+    .lang-btn {
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      border-radius: 36px;
+      padding: 8px 18px;
+      font-size: 13px;
+      font-weight: 700;
+      font-family: inherit;
+      color: var(--text-muted);
+      transition: all .2s;
+      letter-spacing: .04em;
+    }
+    .lang-btn.active {
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 0 2px 12px rgba(88,166,255,.4);
+    }
+    .lang-btn:hover:not(.active) { color: var(--text); background: rgba(255,255,255,.06); }
+
+    /* ===== HERO ===== */
+    .hero {
+      background: linear-gradient(135deg, #0d1117 0%, #161b22 40%, #0d1117 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 60px 24px 50px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(88,166,255,.12), transparent);
+      pointer-events: none;
+    }
+    .hero-tag {
+      display: inline-block;
+      background: rgba(88,166,255,.12);
+      color: var(--accent);
+      border: 1px solid rgba(88,166,255,.3);
+      border-radius: 20px;
+      padding: 4px 14px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .hero h1 {
+      font-size: clamp(24px, 4vw, 42px);
+      font-weight: 800;
+      background: linear-gradient(135deg, #e6edf3, #58a6ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 16px;
+      line-height: 1.3;
+    }
+    .hero p {
+      max-width: 700px;
+      margin: 0 auto 28px;
+      color: var(--text-muted);
+      font-size: 16px;
+    }
+    .hero-meta {
+      display: flex; flex-wrap: wrap; justify-content: center; gap: 24px;
+      color: var(--text-muted); font-size: 13px;
+    }
+    .hero-meta span { display: flex; align-items: center; gap: 6px; }
+
+    /* ===== NAV ===== */
+    .sticky-nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(13,17,23,.9);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+      display: flex; align-items: center; gap: 4px;
+      overflow-x: auto;
+    }
+    .sticky-nav a {
+      color: var(--text-muted);
+      text-decoration: none;
+      padding: 14px 14px;
+      font-size: 13px;
+      font-weight: 600;
+      white-space: nowrap;
+      border-bottom: 2px solid transparent;
+      transition: color .2s, border-color .2s;
+    }
+    .sticky-nav a:hover { color: var(--text); border-color: var(--accent); }
+
+    /* ===== CONTAINER ===== */
+    .container { max-width: 1140px; margin: 0 auto; padding: 0 24px; }
+    section { padding: 60px 0; }
+    section + section { border-top: 1px solid var(--border); }
+
+    /* ===== SECTION TITLES ===== */
+    .section-header { margin-bottom: 36px; }
+    .section-header h2 {
+      font-size: 24px; font-weight: 800; margin-bottom: 8px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .section-header h2 .icon { font-size: 22px; }
+    .section-header p { color: var(--text-muted); max-width: 680px; }
+
+    /* ===== VERSION BADGES ===== */
+    .badge {
+      display: inline-block;
+      border-radius: 6px;
+      padding: 2px 10px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #fff;
+    }
+    .v1 { background: var(--badge-v1); }
+    .v2 { background: var(--badge-v2); }
+    .v3 { background: var(--badge-v3); }
+    .v4 { background: var(--badge-v4); }
+    .v5 { background: var(--badge-v5); }
+    .v6 { background: var(--badge-v6); }
+
+    /* ===== TIMELINE ===== */
+    .timeline { position: relative; padding-left: 32px; }
+    .timeline::before {
+      content: '';
+      position: absolute; left: 10px; top: 8px; bottom: 8px;
+      width: 2px; background: var(--border);
+    }
+    .timeline-item { position: relative; margin-bottom: 40px; }
+    .timeline-item:last-child { margin-bottom: 0; }
+    .timeline-dot {
+      position: absolute; left: -27px; top: 4px;
+      width: 14px; height: 14px;
+      border-radius: 50%;
+      border: 2px solid var(--bg);
+    }
+    .tl-header {
+      display: flex; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap;
+    }
+    .tl-header h3 { font-size: 17px; font-weight: 700; }
+    .tl-header .sub { color: var(--text-muted); font-size: 13px; }
+
+    .change-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 12px;
+      margin-top: 12px;
+    }
+    .change-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+    }
+    .change-card .label {
+      font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em;
+      color: var(--text-muted); margin-bottom: 8px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .change-card ul { list-style: none; }
+    .change-card ul li { font-size: 13px; padding: 3px 0; color: var(--text); }
+    .change-card ul li::before { content: '→ '; color: var(--accent); }
+    .change-card ul li.added::before { content: '+ '; color: var(--accent2); }
+    .change-card ul li.removed::before { content: '− '; color: var(--danger); }
+    .change-card ul li.changed::before { content: '± '; color: var(--warn); }
+
+    /* ===== METRICS TABLE ===== */
+    .metrics-wrap { overflow-x: auto; border-radius: 12px; border: 1px solid var(--border); }
+    table.metrics {
+      width: 100%; border-collapse: collapse; font-size: 13px;
+    }
+    table.metrics th {
+      background: var(--surface2);
+      padding: 12px 16px;
+      text-align: left;
+      font-weight: 700;
+      color: var(--text-muted);
+      white-space: nowrap;
+      border-bottom: 1px solid var(--border);
+    }
+    table.metrics td {
+      padding: 11px 16px;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    table.metrics tr:last-child td { border-bottom: none; }
+    table.metrics tr:hover td { background: rgba(255,255,255,.03); }
+    .num { font-variant-numeric: tabular-nums; font-family: 'Consolas', monospace; }
+    .best { color: var(--accent2); font-weight: 700; }
+    .worst { color: var(--danger); }
+    .na { color: var(--text-muted); }
+
+    /* ===== BAR CHART ===== */
+    .bar-section { margin-top: 40px; }
+    .bar-group { margin-bottom: 32px; }
+    .bar-group h3 { font-size: 15px; margin-bottom: 14px; color: var(--text-muted); font-weight: 700; }
+    .bar-row { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+    .bar-label { width: 36px; font-size: 12px; font-weight: 700; text-align: right; }
+    .bar-track { flex: 1; background: var(--surface2); border-radius: 4px; height: 22px; overflow: hidden; }
+    .bar-fill {
+      height: 100%; border-radius: 4px;
+      display: flex; align-items: center; padding-left: 8px;
+      font-size: 11px; font-weight: 700; color: #fff;
+      transition: width .6s ease;
+    }
+    .bar-val { width: 52px; font-size: 12px; font-family: monospace; color: var(--text-muted); }
+
+    .bar-pothole { background: linear-gradient(90deg,#f0883e,#e36209); }
+    .bar-crack   { background: linear-gradient(90deg,#58a6ff,#1f6feb); }
+    .bar-manhole { background: linear-gradient(90deg,#3fb950,#238636); }
+    .bar-v1 { background: linear-gradient(90deg,#6e7681,#484f58); }
+    .bar-v2 { background: linear-gradient(90deg,#388bfd,#1a7bfd); }
+    .bar-v3 { background: linear-gradient(90deg,#a371f7,#8250df); }
+    .bar-v4 { background: linear-gradient(90deg,#f0883e,#e36209); }
+    .bar-v5 { background: linear-gradient(90deg,#3fb950,#238636); }
+    .bar-v6 { background: linear-gradient(90deg,#f778ba,#bf4b8a); }
+
+    /* ===== ACCURACY IMAGES ===== */
+    .img-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+      gap: 20px;
+    }
+    .img-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .img-card-header {
+      padding: 12px 16px;
+      display: flex; align-items: center; gap: 10px;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface2);
+    }
+    .img-card-header h3 { font-size: 14px; font-weight: 700; }
+    .img-card-header .map-pill {
+      margin-left: auto;
+      background: rgba(88,166,255,.15);
+      color: var(--accent);
+      border: 1px solid rgba(88,166,255,.3);
+      border-radius: 20px;
+      padding: 2px 10px;
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .img-card img { width: 100%; display: block; }
+
+    /* ===== VERDICT ===== */
+    .verdict-box {
+      background: linear-gradient(135deg, rgba(63,185,80,.1), rgba(88,166,255,.08));
+      border: 1px solid rgba(63,185,80,.4);
+      border-radius: 14px;
+      padding: 32px;
+    }
+    .verdict-box h3 {
+      font-size: 20px; font-weight: 800;
+      color: var(--accent2);
+      margin-bottom: 16px;
+      display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    }
+    .verdict-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; margin-top: 24px; }
+    .verdict-item {
+      background: rgba(255,255,255,.04);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+    }
+    .verdict-item .v-label { font-size: 11px; text-transform: uppercase; letter-spacing: .07em; color: var(--text-muted); margin-bottom: 6px; font-weight: 700; }
+    .verdict-item .v-val { font-size: 22px; font-weight: 800; }
+    .verdict-item .v-sub { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+    .runner-up-box {
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin-top: 20px;
+    }
+    .runner-up-box.orange { background: rgba(240,136,62,.08); border: 1px solid rgba(240,136,62,.3); }
+    .runner-up-box.purple { background: rgba(163,113,247,.08); border: 1px solid rgba(163,113,247,.3); }
+    .runner-up-box h4 { font-size: 15px; margin-bottom: 8px; font-weight: 700; }
+    .runner-up-box.orange h4 { color: var(--warn); }
+    .runner-up-box.purple h4 { color: var(--badge-v3); }
+
+    /* ===== SUMMARY TABLE ===== */
+    .summary-table-wrap { overflow-x: auto; }
+    table.summary {
+      width: 100%; border-collapse: collapse; font-size: 13px;
+    }
+    table.summary th, table.summary td {
+      padding: 10px 14px; text-align: center; border: 1px solid var(--border);
+    }
+    table.summary th { background: var(--surface2); font-weight: 700; color: var(--text-muted); }
+    table.summary td:first-child { text-align: left; font-weight: 600; }
+    .hl { background: rgba(63,185,80,.08); }
+
+    /* ===== FOOTER ===== */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 30px 24px;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+
+    /* ===== NOTE ===== */
+    .note {
+      font-size: 12px; color: var(--text-muted); margin-top: 10px;
+    }
+
+    /* ===== TRAINING GRAPH PANEL ===== */
+    .graph-panel {
+      margin-top: 20px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .graph-panel-header {
+      background: var(--surface2);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 18px;
+      display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    }
+    .graph-panel-header h4 { font-size: 14px; font-weight: 700; }
+    .graph-panel-header .graph-tag {
+      margin-left: auto;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
+    .graph-panel-body {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+    }
+    .graph-panel-body.single { grid-template-columns: 1fr; }
+    .graph-img-wrap { border-right: 1px solid var(--border); }
+    .graph-img-wrap:last-child { border-right: none; }
+    .graph-img-wrap img { width: 100%; display: block; }
+    .graph-img-wrap .g-label {
+      background: var(--surface2);
+      padding: 6px 14px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      border-top: 1px solid var(--border);
+    }
+    .graph-analysis {
+      padding: 16px 18px;
+      border-top: 1px solid var(--border);
+      background: rgba(255,255,255,.02);
+    }
+    .graph-analysis p { font-size: 13px; color: var(--text-muted); line-height: 1.75; margin-bottom: 8px; }
+    .graph-analysis p:last-child { margin-bottom: 0; }
+    .graph-analysis strong { color: var(--text); }
+    .graph-analysis .obs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .obs-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 12px;
+      line-height: 1.6;
+    }
+    .obs-item .obs-icon { font-size: 14px; margin-bottom: 4px; }
+    .obs-item .obs-title { font-weight: 700; color: var(--text); margin-bottom: 2px; }
+    .obs-item .obs-body { color: var(--text-muted); }
+    .obs-item.good { border-left: 3px solid var(--accent2); }
+    .obs-item.warn { border-left: 3px solid var(--warn); }
+    .obs-item.bad  { border-left: 3px solid var(--danger); }
+    .obs-item.info { border-left: 3px solid var(--accent); }
+
+    @media (max-width: 600px) {
+      .img-grid { grid-template-columns: 1fr; }
+      .change-grid { grid-template-columns: 1fr; }
+      .lang-toggle { bottom: 16px; right: 16px; }
+      .graph-panel-body { grid-template-columns: 1fr; }
+      .graph-img-wrap { border-right: none; border-bottom: 1px solid var(--border); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ===== LANGUAGE TOGGLE ===== -->
+<div class="lang-toggle" role="group" aria-label="Language selector">
+  <button class="lang-btn active" id="btn-en" onclick="setLang('en')">EN</button>
+  <button class="lang-btn" id="btn-th" onclick="setLang('th')">ภาษาไทย</button>
+</div>
+
+<!-- ===== HERO ===== -->
+<div class="hero">
+  <div class="hero-tag" data-en="🛣️ Road Damage Detection · YOLO11 Series" data-th="🛣️ การตรวจจับความเสียหายบนถนน · ชุด YOLO11">🛣️ Road Damage Detection · YOLO11 Series</div>
+  <h1>
+    <span data-en="Model Version Comparison<br>v1 → v6" data-th="เปรียบเทียบเวอร์ชันโมเดล<br>v1 → v6">Model Version Comparison<br>v1 → v6</span>
+  </h1>
+  <p data-en="A comprehensive comparison of six training iterations for detecting <strong>potholes</strong>, <strong>cracks</strong>, and <strong>manholes</strong> on road surfaces using YOLO11."
+     data-th="การเปรียบเทียบอย่างละเอียดของการฝึก 6 รอบสำหรับการตรวจจับ <strong>หลุมบ่อ</strong>, <strong>รอยแตกร้าว</strong> และ <strong>ฝาท่อ</strong> บนพื้นถนนด้วย YOLO11">
+    A comprehensive comparison of six training iterations for detecting <strong>potholes</strong>, <strong>cracks</strong>, and <strong>manholes</strong> on road surfaces using YOLO11.
+  </p>
+  <div class="hero-meta">
+    <span data-en="🏗️ Framework: Ultralytics YOLO11" data-th="🏗️ เฟรมเวิร์ก: Ultralytics YOLO11">🏗️ Framework: Ultralytics YOLO11</span>
+    <span data-en="🎯 Classes: Pothole · Crack · Manhole" data-th="🎯 คลาส: หลุมบ่อ · รอยแตกร้าว · ฝาท่อ">🎯 Classes: Pothole · Crack · Manhole</span>
+    <span data-en="📐 Metric: mAP50" data-th="📐 เมตริก: mAP50">📐 Metric: mAP50</span>
+  </div>
+</div>
+
+<!-- ===== STICKY NAV ===== -->
+<nav class="sticky-nav">
+  <a href="#overview"       data-en="Overview"          data-th="ภาพรวม">Overview</a>
+  <a href="#changes"        data-en="Version Changes"   data-th="การเปลี่ยนแปลง">Version Changes</a>
+  <a href="#metrics"        data-en="Metrics"           data-th="ผลลัพธ์">Metrics</a>
+  <a href="#charts"         data-en="Charts"            data-th="กราฟ">Charts</a>
+  <a href="#accuracy-images" data-en="Accuracy Outputs" data-th="ผลการทดสอบ">Accuracy Outputs</a>
+  <a href="#verdict"        data-en="Conclusion"        data-th="สรุป">Conclusion</a>
+</nav>
+
+<!-- ===== OVERVIEW ===== -->
+<section id="overview">
+  <div class="container">
+    <div class="section-header">
+      <h2><span class="icon">📊</span> <span data-en="Quick Overview" data-th="ภาพรวมเบื้องต้น">Quick Overview</span></h2>
+      <p data-en="High-level configuration comparison across all six versions at a glance."
+         data-th="ตารางเปรียบเทียบการตั้งค่าระดับสูงของทั้ง 6 เวอร์ชันแบบรวดเร็ว">
+        High-level configuration comparison across all six versions at a glance.
+      </p>
+    </div>
+    <div class="summary-table-wrap">
+      <table class="summary">
+        <thead>
+          <tr>
+            <th data-en="Version"   data-th="เวอร์ชัน">Version</th>
+            <th data-en="Model"     data-th="โมเดล">Model</th>
+            <th data-en="Epochs"    data-th="รอบ">Epochs</th>
+            <th data-en="Img Size"  data-th="ขนาดภาพ">Img Size</th>
+            <th data-en="Optimizer" data-th="ออปติไมเซอร์">Optimizer</th>
+            <th data-en="Batch"     data-th="แบตช์">Batch</th>
+            <th data-en="Data Split" data-th="แบ่งข้อมูล">Data Split</th>
+            <th data-en="K-Fold"    data-th="K-Fold">K-Fold</th>
+            <th data-en="TTA Eval"  data-th="TTA">TTA Eval</th>
+            <th data-en="mAP50 (Val)"  data-th="mAP50 (ตรวจสอบ)">mAP50 (Val)</th>
+            <th data-en="mAP50 (Test)" data-th="mAP50 (ทดสอบ)">mAP50 (Test)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="badge v1">v1</span></td>
+            <td>YOLO11s</td><td>100</td><td>640</td><td>RAdam</td>
+            <td>16</td>
+            <td data-en="Train=Val (same)" data-th="เทรน=ตรวจสอบ (เซ็ตเดียวกัน)">Train=Val (same)</td>
+            <td data-en="No" data-th="ไม่ใช้">No</td>
+            <td data-en="No" data-th="ไม่ใช้">No</td>
+            <td class="num worst">0.5670</td><td class="num na">—</td>
+          </tr>
+          <tr>
+            <td><span class="badge v2">v2</span></td>
+            <td>YOLO11n</td><td>100</td><td>800</td><td>RAdam</td>
+            <td>8</td>
+            <td data-en="80/20 split" data-th="แบ่ง 80/20">80/20 split</td>
+            <td data-en="No" data-th="ไม่ใช้">No</td>
+            <td data-en="No" data-th="ไม่ใช้">No</td>
+            <td class="num">0.3910</td><td class="num na">—</td>
+          </tr>
+          <tr>
+            <td><span class="badge v3">v3</span></td>
+            <td>YOLO11s</td><td>100</td><td>896</td><td>AdamW</td>
+            <td>8</td>
+            <td data-en="75/15/10" data-th="แบ่ง 75/15/10">75/15/10</td>
+            <td data-en="Yes (k=5)" data-th="ใช้ (k=5)">Yes (k=5)</td>
+            <td data-en="Yes" data-th="ใช้">Yes</td>
+            <td class="num">0.7110</td><td class="num">0.7171</td>
+          </tr>
+          <tr>
+            <td><span class="badge v4">v4</span></td>
+            <td>YOLO11m</td><td>200</td><td>896</td><td>RAdam</td>
+            <td>32</td>
+            <td data-en="75/15/10" data-th="แบ่ง 75/15/10">75/15/10</td>
+            <td data-en="No" data-th="ไม่ใช้">No</td>
+            <td data-en="Yes" data-th="ใช้">Yes</td>
+            <td class="num">0.3662</td><td class="num">0.3757</td>
+          </tr>
+          <tr>
+            <td><span class="badge v5">v5</span></td>
+            <td>YOLO11s</td><td>200</td><td>896</td><td>AdamW</td>
+            <td data-en="Auto (0.8)" data-th="อัตโนมัติ (0.8)">Auto (0.8)</td>
+            <td data-en="75/15/10" data-th="แบ่ง 75/15/10">75/15/10</td>
+            <td data-en="No" data-th="ไม่ใช้">No</td>
+            <td data-en="Yes" data-th="ใช้">Yes</td>
+            <td class="num">0.4830</td><td class="num">0.4316</td>
+          </tr>
+          <tr class="hl">
+            <td><span class="badge v6">v6</span></td>
+            <td>YOLO11s</td><td>150</td><td>960</td><td>AdamW</td>
+            <td data-en="Auto (0.8)" data-th="อัตโนมัติ (0.8)">Auto (0.8)</td>
+            <td data-en="75/15/10" data-th="แบ่ง 75/15/10">75/15/10</td>
+            <td data-en="No" data-th="ไม่ใช้">No</td>
+            <td data-en="Yes" data-th="ใช้">Yes</td>
+            <td class="num best">0.4584</td><td class="num best">0.4339</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note" data-en="* v1 uses train=val set (inflated). † v3 uses only 15 val images (inflated). Fair comparison: v4–v6."
+                    data-th="* v1 ใช้เซ็ตเดียวกันสำหรับ train และ val (ผลสูงเกินจริง). † v3 ใช้ภาพ val เพียง 15 ภาพ (ผลสูงเกินจริง). การเปรียบเทียบที่ยุติธรรม: v4–v6">
+      * v1 uses train=val set (inflated). † v3 uses only 15 val images (inflated). Fair comparison: v4–v6.
+    </p>
+  </div>
+</section>
+
+<!-- ===== VERSION CHANGES ===== -->
+<section id="changes">
+  <div class="container">
+    <div class="section-header">
+      <h2><span class="icon">🔄</span> <span data-en="Version-by-Version Changes" data-th="การเปลี่ยนแปลงในแต่ละเวอร์ชัน">Version-by-Version Changes</span></h2>
+      <p data-en="What was added, modified, or removed between each version."
+         data-th="สิ่งที่ถูกเพิ่ม แก้ไข หรือลบออกระหว่างแต่ละเวอร์ชัน">
+        What was added, modified, or removed between each version.
+      </p>
+    </div>
+    <div class="timeline">
+
+      <!-- V1 -->
+      <div class="timeline-item">
+        <div class="timeline-dot v1" style="background:var(--badge-v1)"></div>
+        <div class="tl-header">
+          <span class="badge v1">v1</span>
+          <h3 data-en="Baseline" data-th="เวอร์ชันตั้งต้น">Baseline</h3>
+          <span class="sub">YOLO11s · 640px · RAdam · <span data-en="No proper split" data-th="ไม่มีการแบ่งข้อมูลที่ถูกต้อง">No proper split</span></span>
+        </div>
+        <div class="change-grid">
+          <div class="change-card">
+            <div class="label">🏗️ <span data-en="Architecture" data-th="สถาปัตยกรรม">Architecture</span></div>
+            <ul>
+              <li class="added" data-en="YOLO11s pretrained weights" data-th="น้ำหนักที่ train มาแล้วของ YOLO11s">YOLO11s pretrained weights</li>
+              <li class="added" data-en="3 classes: pothole, crack, manhole" data-th="3 คลาส: หลุมบ่อ, รอยแตกร้าว, ฝาท่อ">3 classes: pothole, crack, manhole</li>
+            </ul>
+          </div>
+          <div class="change-card">
+            <div class="label">⚠️ <span data-en="Known Issues" data-th="ปัญหาที่พบ">Known Issues</span></div>
+            <ul>
+              <li class="removed" data-en="Train and Val share the same folder (data leakage)" data-th="Train และ Val ใช้โฟลเดอร์เดียวกัน (ข้อมูลรั่วไหล)">Train and Val share the same folder (data leakage)</li>
+              <li class="removed" data-en="No train/val split — inflated metrics" data-th="ไม่มีการแบ่ง train/val — ผลสูงเกินจริง">No train/val split — inflated metrics</li>
+              <li class="removed" data-en="Indentation bug: train_model nested inside create_yaml" data-th="บั๊ก indentation: train_model ซ้อนอยู่ใน create_yaml">Indentation bug: train_model nested inside create_yaml</li>
+              <li class="removed" data-en="No CPU/GPU auto-detection" data-th="ไม่มีการตรวจสอบ CPU/GPU อัตโนมัติ">No CPU/GPU auto-detection</li>
+            </ul>
+          </div>
+          <div class="change-card">
+            <div class="label">⚙️ <span data-en="Hyperparameters" data-th="พารามิเตอร์">Hyperparameters</span></div>
+            <ul>
+              <li>Optimizer: RAdam</li>
+              <li>LR0: 0.00761 · LRF: 0.0698</li>
+              <li>Batch: 16 · Workers: 4</li>
+              <li>Img size: 640 · Epochs: 100</li>
+              <li data-en="No augmentation params set" data-th="ไม่ได้ตั้งค่า augmentation">No augmentation params set</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- V1 GRAPH PANEL -->
+        <div class="graph-panel">
+          <div class="graph-panel-header">
+            <span class="badge v1">v1</span>
+            <h4 data-en="Training Graphs — Results &amp; Confusion Matrix" data-th="กราฟการเทรน — ผลลัพธ์และ Confusion Matrix">Training Graphs — Results &amp; Confusion Matrix</h4>
+            <span class="graph-tag" data-en="YOLO11s · 100 Epochs · RAdam · 640px" data-th="YOLO11s · 100 รอบ · RAdam · 640px">YOLO11s · 100 Epochs · RAdam · 640px</span>
+          </div>
+          <div class="graph-panel-body">
+            <div class="graph-img-wrap">
+              <img src="v1_results.png" alt="v1 training results graph" loading="lazy" />
+              <div class="g-label" data-en="Training Curves (Losses · Precision · Recall · mAP50)" data-th="กราฟการเทรน (Loss · Precision · Recall · mAP50)">Training Curves (Losses · Precision · Recall · mAP50)</div>
+            </div>
+            <div class="graph-img-wrap">
+              <img src="v1_confusion.png" alt="v1 normalized confusion matrix" loading="lazy" />
+              <div class="g-label" data-en="Normalized Confusion Matrix (Evaluated on Train Set)" data-th="Confusion Matrix (ประเมินบนชุด Train)">Normalized Confusion Matrix (Evaluated on Train Set)</div>
+            </div>
+          </div>
+          <div class="graph-analysis">
+            <p data-en="<strong>Training curves analysis:</strong> Train losses (box: 2.80 &rarr; 1.96, cls: 3.80 &rarr; 1.81, dfl: 2.12 &rarr; 1.63) decline steadily over 100 epochs using RAdam. However, because v1 has <strong>no separate validation set (train=val data leakage)</strong>, the validation curves directly mirror the training process. The sharp periodic spikes in val losses (e.g., at epochs 8, 33, 46, 66) reflect evaluation volatility on noisy raw batches without outlier cleaning."
+               data-th="<strong>การวิเคราะห์กราฟการเทรน:</strong> Train losses (box: 2.80 &rarr; 1.96, cls: 3.80 &rarr; 1.81, dfl: 2.12 &rarr; 1.63) ลดลงอย่างต่อเนื่องตลอด 100 epochs ด้วย RAdam แต่เนื่องจาก v1 <strong>ไม่มีการแยกชุด validation (เกิด data leakage จากการใช้ train=val)</strong> กราฟ validation จึงสะท้อนผลการเรียนรู้บนชุด train โดยตรง และการเกิด spike แหลมๆ ใน val loss (เช่น epoch 8, 33, 46, 66) เกิดจากความผันผวนในบาง batch ที่มีภาพยากหรือ noise">
+              <strong>Training curves analysis:</strong> Train losses (box: 2.80 &rarr; 1.96, cls: 3.80 &rarr; 1.81, dfl: 2.12 &rarr; 1.63) decline steadily over 100 epochs using RAdam. However, because v1 has <strong>no separate validation set (train=val data leakage)</strong>, the validation curves directly mirror the training process. The sharp periodic spikes in val losses reflect evaluation volatility on noisy raw batches.
+            </p>
+            <p data-en="<strong>Confusion Matrix &amp; Baseline Performance:</strong> Despite being evaluated directly on the data it trained on, the baseline YOLO11s at 640px resolution struggled severely with fine-grained defects. <strong>72% of cracks and 57% of potholes were missed entirely to background</strong>. Only manholes achieved high recall (69%), proving that without higher resolution (896px/960px) and advanced augmentations, small texture-based road defects are easily missed."
+               data-th="<strong>Confusion Matrix และประสิทธิภาพเบื้องต้น:</strong> แม้จะประเมินบนชุดข้อมูลที่ใช้เทรนเอง โมเดล baseline YOLO11s ที่ความละเอียด 640px ก็ยังมีปัญหาอย่างมากกับความเสียหายขนาดเล็ก <strong>72% ของรอยแตก และ 57% ของหลุมบ่อ ถูกมองข้ามไปเป็น background ทั้งหมด</strong> มีเพียงฝาท่อที่ได้ recall สูง (69%) ซึ่งยืนยันว่าหากไม่มีความละเอียดภาพที่สูงขึ้น (896px/960px) และการปรับแต่ง augmentation รอยแตกและหลุมขนาดเล็กจะตรวจจับได้ยากมาก">
+              <strong>Confusion Matrix &amp; Baseline Performance:</strong> Despite being evaluated directly on the training data, the baseline YOLO11s at 640px resolution struggled severely with fine-grained defects. <strong>72% of cracks and 57% of potholes were missed entirely to background</strong>. Only manholes achieved high recall (69%).
+            </p>
+            <div class="obs-grid">
+              <div class="obs-item bad">
+                <div class="obs-icon">❌</div>
+                <div class="obs-title" data-en="Crack: 72% missed to background" data-th="รอยแตก: 72% พลาดเป็น background">Crack: 72% missed to background</div>
+                <div class="obs-body" data-en="Only 26% recall on crack even on training data. 48% of background predictions were false crack detections due to surface noise at 640px." data-th="ได้ recall ของรอยแตกเพียง 26% แม้จะวัดบนชุด train เอง และ 48% ของ background ถูกทำนายผิดเป็นรอยแตกจาก noise ของพื้นผิวที่ 640px">Only 26% recall on crack even on training data. 48% of background predictions were false crack detections.</div>
+              </div>
+              <div class="obs-item bad">
+                <div class="obs-icon">❌</div>
+                <div class="obs-title" data-en="Pothole: 57% missed to background" data-th="หลุมบ่อ: 57% พลาดเป็น background">Pothole: 57% missed to background</div>
+                <div class="obs-body" data-en="Only 34% recall for potholes. Lack of multi-scale augmentation and small input resolution (640px) caused small/shallow potholes to be missed." data-th="ได้ recall ของหลุมบ่อเพียง 34% การขาด augmentation หลายระดับและความละเอียดภาพต่ำ (640px) ทำให้หลุมขนาดเล็ก/ตื้นถูกมองข้าม">Only 34% recall for potholes due to 640px image size and lack of multi-scale training.</div>
+              </div>
+              <div class="obs-item good">
+                <div class="obs-icon">✅</div>
+                <div class="obs-title" data-en="Manhole: 69% recall" data-th="ฝาท่อ: recall 69%">Manhole: 69% recall</div>
+                <div class="obs-body" data-en="69% correctly identified on train set. Manholes have distinct geometric circular/square features that are easier for standard CNN/backbone to extract." data-th="ตรวจจับถูกต้อง 69% บนชุด train ฝาท่อมีรูปทรงเรขาคณิตที่ชัดเจน (วงกลม/สี่เหลี่ยม) ทำให้ backbone ตรวจจับได้ง่ายกว่า">69% correctly identified. Manholes have distinct geometric features that standard backbones extract easily.</div>
+              </div>
+              <div class="obs-item info">
+                <div class="obs-icon">ℹ️</div>
+                <div class="obs-title" data-en="Data leakage caveat" data-th="ข้อควรระวังเรื่อง Data Leakage">Data leakage caveat</div>
+                <div class="obs-body" data-en="mAP50=0.5670 is an artifact of train=val evaluation. In reality, on unseen data, v1's performance would be significantly lower (estimated &lt;0.30)." data-th="mAP50=0.5670 เป็นผลจากการใช้ train=val ในความเป็นจริงบนชุดข้อมูลใหม่ที่ไม่เคยเห็น ประสิทธิภาพของ v1 จะต่ำกว่านี้มาก (ประเมินว่า &lt;0.30)">mAP50=0.5670 is inflated due to train=val evaluation. True unseen performance is estimated to be much lower.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- V2 -->
+      <div class="timeline-item">
+        <div class="timeline-dot v2" style="background:var(--badge-v2)"></div>
+        <div class="tl-header">
+          <span class="badge v2">v2</span>
+          <h3 data-en="GPU Auto-Detection + Train/Val Split + Augmentation" data-th="ตรวจจับ GPU อัตโนมัติ + แบ่งข้อมูล + Augmentation">GPU Auto-Detection + Train/Val Split + Augmentation</h3>
+          <span class="sub">YOLO11n/m · 800px · RAdam · <span data-en="80/20 split" data-th="แบ่ง 80/20">80/20 split</span></span>
+        </div>
+        <div class="change-grid">
+          <div class="change-card">
+            <div class="label">✅ <span data-en="Additions" data-th="สิ่งที่เพิ่มใหม่">Additions</span></div>
+            <ul>
+              <li class="added" data-en="Auto GPU/CPU detection (get_device())" data-th="ตรวจจับ GPU/CPU อัตโนมัติ (get_device())">Auto GPU/CPU detection (get_device())</li>
+              <li class="added" data-en="Proper 80/20 random train/val split" data-th="แบ่งข้อมูล train/val 80/20 แบบสุ่ม">Proper 80/20 random train/val split</li>
+              <li class="added" data-en="Data augmentation: mosaic, mixup, degrees, scale, HSV" data-th="Data augmentation: mosaic, mixup, degrees, scale, HSV">Data augmentation: mosaic, mixup, degrees, scale, HSV</li>
+              <li class="added" data-en="OOM error handling (try/except)" data-th="จัดการข้อผิดพลาด OOM (try/except)">OOM error handling (try/except)</li>
+              <li class="added" data-en="Offline fallback (yolo11n.yaml)" data-th="รองรับโหมดออฟไลน์ (yolo11n.yaml)">Offline fallback (yolo11n.yaml)</li>
+              <li class="added" data-en="random.seed() added for reproducibility" data-th="เพิ่ม random.seed() เพื่อความสม่ำเสมอ">random.seed() added for reproducibility</li>
+            </ul>
+          </div>
+          <div class="change-card">
+            <div class="label">🔄 <span data-en="Changes" data-th="สิ่งที่เปลี่ยนแปลง">Changes</span></div>
+            <ul>
+              <li class="changed" data-en="Img size: 640 → 800" data-th="ขนาดภาพ: 640 → 800">Img size: 640 → 800</li>
+              <li class="changed" data-en="Target model: yolo11m.pt (falls back to yolo11n)" data-th="โมเดลเป้าหมาย: yolo11m.pt (ใช้ yolo11n แทนเมื่อออฟไลน์)">Target model: yolo11m.pt (falls back to yolo11n)</li>
+              <li class="changed" data-en="Batch auto-scaled: 8 (GPU) / 4 (CPU)" data-th="Batch ปรับอัตโนมัติ: 8 (GPU) / 4 (CPU)">Batch auto-scaled: 8 (GPU) / 4 (CPU)</li>
+              <li class="changed" data-en="LR0: 0.00761 → 0.00702, Momentum: 0.159 → 0.091" data-th="LR0: 0.00761 → 0.00702, โมเมนตัม: 0.159 → 0.091">LR0: 0.00761 → 0.00702, Momentum: 0.159 → 0.091</li>
+              <li class="changed" data-en="CUDA cache only cleared if not CPU" data-th="ล้าง CUDA cache เฉพาะเมื่อใช้ GPU">CUDA cache only cleared if not CPU</li>
+            </ul>
+          </div>
+          <div class="change-card">
+            <div class="label">⚠️ <span data-en="Remaining Issues" data-th="ปัญหาที่ยังมีอยู่">Remaining Issues</span></div>
+            <ul>
+              <li class="removed" data-en="Random shuffle split — no group-aware split" data-th="แบ่งแบบสุ่ม — ยังไม่มี group-aware split">Random shuffle split — no group-aware split</li>
+              <li class="removed" data-en="No test set — only val" data-th="ไม่มีชุดทดสอบ — มีแค่ val">No test set — only val</li>
+              <li class="removed" data-en="Actually trained as YOLOn (offline), not YOLO11m" data-th="เทรนด้วย YOLOn (ออฟไลน์) ไม่ใช่ YOLO11m จริงๆ">Actually trained as YOLOn (offline), not YOLO11m</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- V3 -->
+      <div class="timeline-item">
+        <div class="timeline-dot v3" style="background:var(--badge-v3)"></div>
+        <div class="tl-header">
+          <span class="badge v3">v3</span>
+          <h3 data-en="K-Fold CV + Group-Aware Split + pHash Dedup" data-th="K-Fold CV + แบ่งกลุ่มอัจฉริยะ + ขจัดภาพซ้ำด้วย pHash">K-Fold CV + Group-Aware Split + pHash Dedup</h3>
+          <span class="sub">YOLO11s · 896px · AdamW · <span data-en="5-Fold CV" data-th="Cross-validation 5 Fold">5-Fold CV</span></span>
+        </div>
+        <div class="change-grid">
+          <div class="change-card">
+            <div class="label">✅ <span data-en="Major Additions" data-th="สิ่งสำคัญที่เพิ่มใหม่">Major Additions</span></div>
+            <ul>
+              <li class="added" data-en="Group K-Fold (k=5) cross-validation" data-th="Group K-Fold (k=5) cross-validation">Group K-Fold (k=5) cross-validation</li>
+              <li class="added" data-en="pHash-based duplicate detection" data-th="ตรวจจับภาพซ้ำด้วย pHash">pHash-based duplicate detection</li>
+              <li class="added" data-en="Union-Find (UF) grouping of near-duplicate frames" data-th="จัดกลุ่มเฟรมที่คล้ายกันด้วย Union-Find">Union-Find (UF) grouping of near-duplicate frames</li>
+              <li class="added" data-en="Instance-balanced fold assignment" data-th="การกำหนด fold ที่สมดุลตาม instance">Instance-balanced fold assignment</li>
+              <li class="added" data-en="Separate test set (75/15/10)" data-th="แยกชุดทดสอบ (75/15/10)">Separate test set (75/15/10)</li>
+              <li class="added" data-en="Test-Time Augmentation (TTA)" data-th="Test-Time Augmentation (TTA)">Test-Time Augmentation (TTA)</li>
+            </ul>
+          </div>
+          <div class="change-card">
+            <div class="label">🔄 <span data-en="Changes" data-th="สิ่งที่เปลี่ยนแปลง">Changes</span></div>
+            <ul>
+              <li class="changed" data-en="Optimizer: RAdam → AdamW" data-th="ออปติไมเซอร์: RAdam → AdamW">Optimizer: RAdam → AdamW</li>
+              <li class="changed" data-en="LR0: 0.00702 → 0.00150" data-th="LR0: 0.00702 → 0.00150">LR0: 0.00702 → 0.00150</li>
+              <li class="changed" data-en="Momentum: 0.091 → 0.937 (AdamW range)" data-th="โมเมนตัม: 0.091 → 0.937 (ช่วง AdamW)">Momentum: 0.091 → 0.937 (AdamW range)</li>
+              <li class="changed" data-en="Dropout: 0.113 → 0.0" data-th="Dropout: 0.113 → 0.0">Dropout: 0.113 → 0.0</li>
+              <li class="changed" data-en="Img size: 800 → 896" data-th="ขนาดภาพ: 800 → 896">Img size: 800 → 896</li>
+              <li class="changed" data-en="Epochs: 100 → 150 (per fold)" data-th="รอบการเทรน: 100 → 150 (ต่อ fold)">Epochs: 100 → 150 (per fold)</li>
+              <li class="changed" data-en="cos_lr=True, warmup_epochs=5 added" data-th="เพิ่ม cos_lr=True, warmup_epochs=5">cos_lr=True, warmup_epochs=5 added</li>
+            </ul>
+          </div>
+          <div class="change-card">
+            <div class="label">⚠️ <span data-en="Caveats" data-th="ข้อควรระวัง">Caveats</span></div>
+            <ul>
+              <li class="removed" data-en="Very small val/test sets (15 val, 12 test images)" data-th="ชุด val/test เล็กมาก (15 ภาพ val, 12 ภาพ test)">Very small val/test sets (15 val, 12 test images)</li>
+              <li class="removed" data-en="High mAP may reflect tiny eval set, not real performance" data-th="mAP สูงอาจสะท้อนชุดประเมินขนาดเล็ก ไม่ใช่ประสิทธิภาพจริง">High mAP may reflect tiny eval set, not real performance</li>
+              <li class="removed" data-en="mAP50 still rising at epoch 100 — training ended before convergence" data-th="mAP50 ยังเพิ่มขึ้นที่ epoch 100 — หยุดเทรนก่อนที่โมเดลจะ converge">mAP50 still rising at epoch 100 — training ended before convergence</li>
+              <li class="removed" data-en="Two code blocks merged — confusing structure" data-th="รวมโค้ด 2 บล็อก — โครงสร้างสับสน">Two code blocks merged — confusing structure</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- V3 GRAPH PANEL -->
+        <div class="graph-panel">
+          <div class="graph-panel-header">
+            <span class="badge v3">v3</span>
+            <h4 data-en="Training Graphs — Results &amp; Confusion Matrix" data-th="กราฟการเทรน — ผลลัพธ์และ Confusion Matrix">Training Graphs — Results &amp; Confusion Matrix</h4>
+            <span class="graph-tag" data-en="YOLO11s · 100 Epochs · K-Fold" data-th="YOLO11s · 100 รอบ · K-Fold">YOLO11s · 100 Epochs · K-Fold</span>
+          </div>
+          <div class="graph-panel-body">
+            <div class="graph-img-wrap">
+              <img src="v3_results.png" alt="v3 training results graph" loading="lazy" />
+              <div class="g-label" data-en="Training Curves (Losses · Precision · Recall · mAP50)" data-th="กราฟการเทรน (Loss · Precision · Recall · mAP50)">Training Curves (Losses · Precision · Recall · mAP50)</div>
+            </div>
+            <div class="graph-img-wrap">
+              <img src="v3_confusion.png" alt="v3 normalized confusion matrix" loading="lazy" />
+              <div class="g-label" data-en="Normalized Confusion Matrix (Validation)" data-th="Confusion Matrix (Validation)">Normalized Confusion Matrix (Validation)</div>
+            </div>
+          </div>
+          <div class="graph-analysis">
+            <p data-en="<strong>Training loss curves</strong> (box, cls, dfl) all drop steadily, confirming effective learning. A notable <strong>sharp spike at epoch ~80</strong> in train losses and val losses is visible — this corresponds to the K-Fold cross-validation fold boundary where the model resets to a new train/val split. After the reset, losses recover quickly and continue decreasing."
+               data-th="<strong>กราฟ loss</strong> ทั้ง box, cls, dfl ลดลงอย่างต่อเนื่อง ยืนยันว่าโมเดลเรียนรู้ได้อย่างมีประสิทธิภาพ มีการ <strong>spike ชัดเจนที่ประมาณ epoch 80</strong> ทั้งใน train losses และ val losses — นี่คือจุดที่ K-Fold เปลี่ยน fold ใหม่ ทำให้โมเดลรีเซ็ตและเรียนรู้บน train/val ชุดใหม่ หลังจากนั้น loss กลับมาลดลงได้รวดเร็ว">
+              <strong>Training loss curves</strong> (box, cls, dfl) all drop steadily, confirming effective learning. A notable <strong>sharp spike at epoch ~80</strong> in train losses and val losses is visible — this corresponds to the K-Fold cross-validation fold boundary where the model resets to a new train/val split. After the reset, losses recover quickly and continue decreasing.
+            </p>
+            <p data-en="<strong>Critically, the mAP50 curve is still climbing at epoch 100</strong> (ending at ~0.65–0.71) and has not plateaued, suggesting the model had not yet converged when training stopped. With a longer training budget (e.g., 200+ epochs per fold), v3 could likely achieve even higher performance. Val losses also plateau but <strong>do not increase</strong>, meaning there is no overfitting at this stage."
+               data-th="<strong>สำคัญมาก: กราฟ mAP50 ยังคงเพิ่มขึ้นเรื่อยๆ ที่ epoch 100</strong> (สิ้นสุดที่ ~0.65–0.71) และยังไม่ถึงจุด plateau แสดงว่าโมเดลยังไม่ converge เมื่อหยุดเทรน หากให้เวลาเทรนเพิ่มขึ้น (เช่น 200+ epochs ต่อ fold) v3 มีโอกาสสูงที่จะทำผลลัพธ์ได้ดีกว่านี้ Val losses ก็ plateau แต่ <strong>ไม่เพิ่มขึ้น</strong> แสดงว่ายังไม่มี overfitting ณ จุดนี้">
+              <strong>Critically, the mAP50 curve is still climbing at epoch 100</strong> (ending at ~0.65–0.71) and has not plateaued, suggesting the model had not yet converged when training stopped. With a longer training budget (e.g., 200+ epochs per fold), v3 could likely achieve even higher performance. Val losses also plateau but <strong>do not increase</strong>, meaning there is no overfitting at this stage.
+            </p>
+            <div class="obs-grid">
+              <div class="obs-item good">
+                <div class="obs-icon">✅</div>
+                <div class="obs-title" data-en="Manhole: Perfect (1.00)" data-th="ฝาท่อ: สมบูรณ์แบบ (1.00)">Manhole: Perfect (1.00)</div>
+                <div class="obs-body" data-en="All manhole instances correctly detected — no false negatives. Likely due to the tiny val set (15 images) heavily biased toward manholes." data-th="ตรวจจับ manhole ได้ครบทุก instance — ไม่มี false negative เลย อาจเป็นเพราะ val set เล็กมาก (15 ภาพ) และมี manhole สัดส่วนสูง">All manhole instances correctly detected — no false negatives. Likely due to the tiny val set (15 images) heavily biased toward manholes.</div>
+              </div>
+              <div class="obs-item warn">
+                <div class="obs-icon">⚠️</div>
+                <div class="obs-title" data-en="Pothole: 38% missed to background" data-th="หลุมบ่อ: 38% ถูกจัดเป็น background">Pothole: 38% missed to background</div>
+                <div class="obs-body" data-en="38% of pothole instances classified as background — model struggles with ambiguous or small pothole instances even at high mAP." data-th="38% ของหลุมบ่อถูกจัดเป็น background — โมเดลยังมีปัญหากับหลุมบ่อที่กำกวมหรือขนาดเล็ก แม้ค่า mAP สูงก็ตาม">38% of pothole instances classified as background — model struggles with ambiguous or small pothole instances even at high mAP.</div>
+              </div>
+              <div class="obs-item warn">
+                <div class="obs-icon">⚠️</div>
+                <div class="obs-title" data-en="Crack: 36% missed to background" data-th="รอยแตก: 36% ถูกจัดเป็น background">Crack: 36% missed to background</div>
+                <div class="obs-body" data-en="36% of crack instances classified as background — a persistent problem across all versions, showing cracks remain the hardest class to detect." data-th="36% ของรอยแตกถูกจัดเป็น background — ปัญหาที่พบในทุกเวอร์ชัน แสดงว่า crack เป็นคลาสที่ตรวจจับยากที่สุด">36% of crack instances classified as background — cracks remain the hardest class to detect.</div>
+              </div>
+              <div class="obs-item info">
+                <div class="obs-icon">ℹ️</div>
+                <div class="obs-title" data-en="Inflated by tiny eval set" data-th="ผลสูงเพราะชุดประเมินเล็กมาก">Inflated by tiny eval set</div>
+                <div class="obs-body" data-en="The mAP50=0.711 is measured on only 15 val images, making the score unreliable for fair comparison. The confusion matrix itself only shows patterns from these few images." data-th="mAP50=0.711 วัดจากภาพ val เพียง 15 ภาพ ทำให้คะแนนไม่น่าเชื่อถือสำหรับการเปรียบเทียบที่ยุติธรรม confusion matrix เองก็แสดงรูปแบบจากภาพเพียงไม่กี่ภาพ">The mAP50=0.711 is measured on only 15 val images, making the score unreliable for fair comparison.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- V4 -->
+      <div class="timeline-item">
+        <div class="timeline-dot v4" style="background:var(--badge-v4)"></div>
+        <div class="tl-header">
+          <span class="badge v4">v4</span>
+          <h3 data-en="Full Pipeline + Polygon Label Conversion + Larger Model" data-th="Pipeline เต็มรูปแบบ + แปลง Label Polygon + โมเดลขนาดใหญ่ขึ้น">Full Pipeline + Polygon Label Conversion + Larger Model</h3>
+          <span class="sub">YOLO11m · 896px · RAdam · 200 Epochs</span>
+        </div>
+        <div class="change-grid">
+          <div class="change-card">
+            <div class="label">✅ <span data-en="Additions" data-th="สิ่งที่เพิ่มใหม่">Additions</span></div>
+            <ul>
+              <li class="added" data-en="Polygon → bounding box label conversion" data-th="แปลง label จาก Polygon → Bounding Box">Polygon → bounding box label conversion</li>
+              <li class="added" data-en="cv2.setNumThreads(0) for GPU efficiency" data-th="cv2.setNumThreads(0) เพื่อให้ GPU ทำงานได้เต็มที่">cv2.setNumThreads(0) for GPU efficiency</li>
+              <li class="added" data-en="Timestamp-based gap clustering" data-th="จัดกลุ่มตาม timestamp">Timestamp-based gap clustering</li>
+              <li class="added" data-en="Frame-number clustering (extract_frame_number)" data-th="จัดกลุ่มตามเลขเฟรม (extract_frame_number)">Frame-number clustering (extract_frame_number)</li>
+              <li class="added" data-en="Max group size cap (25 per group)" data-th="จำกัดขนาดกลุ่มสูงสุด (25 ต่อกลุ่ม)">Max group size cap (25 per group)</li>
+              <li class="added" data-en="Explicit loss weights: box=9.0, cls=0.6, dfl=1.6" data-th="กำหนด loss weight: box=9.0, cls=0.6, dfl=1.6">Explicit loss weights: box=9.0, cls=0.6, dfl=1.6</li>
+            </ul>
+          </div>
+          <div class="change-card">
+            <div class="label">🔄 <span data-en="Changes" data-th="สิ่งที่เปลี่ยนแปลง">Changes</span></div>
+            <ul>
+              <li class="changed" data-en="Model: YOLO11s → YOLO11m (20M params)" data-th="โมเดล: YOLO11s → YOLO11m (20M พารามิเตอร์)">Model: YOLO11s → YOLO11m (20M params)</li>
+              <li class="changed" data-en="Optimizer: AdamW → RAdam (reverted)" data-th="ออปติไมเซอร์: AdamW → RAdam (กลับไปใช้เดิม)">Optimizer: AdamW → RAdam (reverted)</li>
+              <li class="changed" data-en="Epochs: 150 → 200" data-th="รอบการเทรน: 150 → 200">Epochs: 150 → 200</li>
+              <li class="changed" data-en="Batch: 8 → 32 (GPU optimized)" data-th="Batch: 8 → 32 (ปรับสำหรับ GPU)">Batch: 8 → 32 (GPU optimized)</li>
+              <li class="changed" data-en="Workers: 4 → 16" data-th="Workers: 4 → 16">Workers: 4 → 16</li>
+              <li class="changed" data-en="cudnn.benchmark=True for throughput" data-th="เปิด cudnn.benchmark=True เพื่อเพิ่มความเร็ว">cudnn.benchmark=True for throughput</li>
+            </ul>
+          </div>
+          <div class="change-card">
+            <div class="label">❌ <span data-en="Regressions" data-th="ผลลัพธ์ที่แย่ลง">Regressions</span></div>
+            <ul>
+              <li class="removed" data-en="mAP50 dropped: 0.711 → 0.366 (model still learning at epoch 200, never converged)" data-th="mAP50 ลดลง: 0.711 → 0.366 (โมเดลยังเรียนรู้อยู่ที่ epoch 200 และไม่เคย converge)">mAP50 dropped: 0.711 → 0.366 (model still learning at epoch 200, never converged)</li>
+              <li class="removed" data-en="YOLO11m (20M params) too large for this dataset size — needs 5–10× more data to converge" data-th="YOLO11m (20M params) ใหญ่เกินไปสำหรับขนาด dataset นี้ — ต้องการข้อมูลมากกว่า 5–10 เท่า">YOLO11m (20M params) too large for this dataset size — needs 5–10× more data to converge</li>
+              <li class="removed" data-en="Typo left in code ('ago' in polygon block)" data-th="มี typo ในโค้ด ('ago' ใน polygon block)">Typo left in code ('ago' in polygon block)</li>
+              <li class="removed" data-en="No K-Fold (removed)" data-th="ไม่มี K-Fold (ถูกลบออก)">No K-Fold (removed)</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- V4 GRAPH PANEL -->
+        <div class="graph-panel">
+          <div class="graph-panel-header">
+            <span class="badge v4">v4</span>
+            <h4 data-en="Training Graphs — Results &amp; Confusion Matrix" data-th="กราฟการเทรน — ผลลัพธ์และ Confusion Matrix">Training Graphs — Results &amp; Confusion Matrix</h4>
+            <span class="graph-tag" data-en="YOLO11m · 200 Epochs · RAdam · Batch 32" data-th="YOLO11m · 200 รอบ · RAdam · Batch 32">YOLO11m · 200 Epochs · RAdam · Batch 32</span>
+          </div>
+          <div class="graph-panel-body">
+            <div class="graph-img-wrap">
+              <img src="v4_results.png" alt="v4 training results graph" loading="lazy" />
+              <div class="g-label" data-en="Training Curves (Losses · Precision · Recall · mAP50)" data-th="กราฟการเทรน (Loss · Precision · Recall · mAP50)">Training Curves (Losses · Precision · Recall · mAP50)</div>
+            </div>
+            <div class="graph-img-wrap">
+              <img src="v4_confusion.png" alt="v4 normalized confusion matrix" loading="lazy" />
+              <div class="g-label" data-en="Normalized Confusion Matrix (Validation)" data-th="Confusion Matrix (Validation)">Normalized Confusion Matrix (Validation)</div>
+            </div>
+          </div>
+          <div class="graph-analysis">
+            <p data-en="The training curves tell a stark story of <strong>severe underfitting</strong>. While train losses (box, cls, dfl) decrease smoothly over 200 epochs, the <strong>val losses plateau at a very high level</strong> — val/box_loss never goes below ~2.9 and val/cls_loss hovers above 3.0. The large gap between train and val losses confirms the model fails to generalize."
+               data-th="กราฟการเทรนบอกเล่าถึงปัญหา <strong>underfitting อย่างรุนแรง</strong> ถึงแม้ train losses จะลดลงอย่างราบรื่นตลอด 200 epochs แต่ <strong>val losses ยังคงอยู่ในระดับสูงมาก</strong> — val/box_loss ไม่เคยลงต่ำกว่า ~2.9 และ val/cls_loss ยังวนเวียนเกิน 3.0 ช่องว่างใหญ่ระหว่าง train และ val losses ยืนยันว่าโมเดล generalize ไปยัง val set ไม่ได้">
+              The training curves tell a stark story of <strong>severe underfitting</strong>. While train losses (box, cls, dfl) decrease smoothly over 200 epochs, the <strong>val losses plateau at a very high level</strong> — val/box_loss never goes below ~2.9 and val/cls_loss hovers above 3.0. The large gap between train and val losses confirms the model fails to generalize.
+            </p>
+            <p data-en="The <strong>mAP50 curve only reaches 0.37 after 200 epochs and is still climbing</strong> — the model simply needed far more training data than was available for YOLO11m (20M params). The precision metric oscillates (0–0.8) with no stable trend. <strong>This version confirms that scaling up the model architecture is counterproductive when the dataset is small.</strong>"
+               data-th="<strong>mAP50 ถึงแค่ 0.37 หลัง 200 epochs และยังคงเพิ่มขึ้นโดยไม่มีท่าทีว่าจะ converge</strong> — โมเดลต้องการข้อมูลเทรนมากกว่านี้มากสำหรับ YOLO11m (20M params) Precision มีความผันผวนสูง ไม่มีแนวโน้มชัดเจน <strong>เวอร์ชันนี้ยืนยันว่าการขยายขนาดโมเดลนั้นให้ผลเสียเมื่อ dataset มีขนาดเล็ก</strong>">
+              The <strong>mAP50 curve only reaches 0.37 after 200 epochs and is still climbing</strong> — the model simply needed far more training data than was available for YOLO11m (20M params). Precision oscillates wildly with no stable trend. <strong>This version confirms that scaling up the model architecture is counterproductive when the dataset is small.</strong>
+            </p>
+            <div class="obs-grid">
+              <div class="obs-item bad">
+                <div class="obs-icon">❌</div>
+                <div class="obs-title" data-en="Crack: 87% miss rate (catastrophic)" data-th="รอยแตก: อัตราพลาด 87% (ล้มเหลวอย่างสิ้นเชิง)">Crack: 87% miss rate (catastrophic)</div>
+                <div class="obs-body" data-en="87% of crack instances classified as background — the worst result across all versions. YOLO11m has too many parameters to learn crack textures from this limited dataset." data-th="87% ของรอยแตกถูกจัดเป็น background — ผลที่แย่ที่สุดในทุกเวอร์ชัน YOLO11m มีพารามิเตอร์มากเกินไปสำหรับการเรียนรู้ texture ของรอยแตกจาก dataset ที่มีขนาดจำกัด">87% of crack instances classified as background — the worst result across all versions. YOLO11m has too many parameters to learn crack textures from this limited dataset.</div>
+              </div>
+              <div class="obs-item bad">
+                <div class="obs-icon">❌</div>
+                <div class="obs-title" data-en="Pothole: 63% miss rate" data-th="หลุมบ่อ: อัตราพลาด 63%">Pothole: 63% miss rate</div>
+                <div class="obs-body" data-en="63% of potholes go undetected — far worse than v3 (38%) or v5 (44%). The combination of large batch size (32), high workers (16), and RAdam with this dataset was ineffective." data-th="63% ของหลุมบ่อไม่ถูกตรวจจับ — แย่กว่า v3 (38%) หรือ v5 (44%) มาก การรวม batch ขนาดใหญ่ (32), workers สูง (16) และ RAdam บน dataset นี้ไม่มีประสิทธิภาพ">63% of potholes go undetected — far worse than v3 (38%) or v5 (44%). The combination of large batch size, high workers, and RAdam was ineffective on this dataset.</div>
+              </div>
+              <div class="obs-item warn">
+                <div class="obs-icon">⚠️</div>
+                <div class="obs-title" data-en="Manhole: 65% recall" data-th="ฝาท่อ: recall 65%">Manhole: 65% recall</div>
+                <div class="obs-body" data-en="Only class with partial success (0.65 recall), but 27% still missed to background. Manholes' distinctive round shapes allow even an undertrained model to partially detect them." data-th="คลาสเดียวที่โมเดลทำงานได้พอสมควร (recall 0.65) แต่ยัง 27% ถูกจัดเป็น background ฝาท่อมีรูปร่างกลมที่ชัดเจน ทำให้โมเดลเรียนรู้ได้บ้างแม้ยังไม่ fully trained">Only class with partial success (0.65 recall), but 27% still missed to background. Manholes' distinctive round shapes allow even an undertrained model to partially detect them.</div>
+              </div>
+              <div class="obs-item bad">
+                <div class="obs-icon">❌</div>
+                <div class="obs-title" data-en="Model still learning at epoch 200" data-th="โมเดลยังเรียนรู้อยู่ที่ epoch 200">Model still learning at epoch 200</div>
+                <div class="obs-body" data-en="mAP50 did not plateau — confirms YOLO11m requires substantially more data and epochs to converge on this 3-class road damage task." data-th="mAP50 ไม่ถึง plateau — ยืนยันว่า YOLO11m ต้องการข้อมูลและเวลาเทรนมากกว่านี้มากเพื่อ converge บนงานตรวจจับความเสียหายบนถนน 3 คลาส">mAP50 did not plateau — confirms YOLO11m requires substantially more data and epochs to converge on this road damage detection task.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- V5 -->
+      <div class="timeline-item">
+        <div class="timeline-dot v5" style="background:var(--badge-v5)"></div>
+        <div class="tl-header">
+          <span class="badge v5">v5</span>
+          <h3 data-en="Reverted to YOLO11s + AdamW Tuning + Auto Batch" data-th="กลับมาใช้ YOLO11s + ปรับแต่ง AdamW + Auto Batch">Reverted to YOLO11s + AdamW Tuning + Auto Batch</h3>
+          <span class="sub">YOLO11s · 896px · AdamW · <span data-en="Auto-Batch 0.8" data-th="Auto Batch 0.8">Auto-Batch 0.8</span></span>
+        </div>
+        <div class="change-grid">
+          <div class="change-card">
+            <div class="label">✅ <span data-en="Improvements" data-th="การปรับปรุง">Improvements</span></div>
+            <ul>
+              <li class="added" data-en="Auto-batch mode (BATCH=0.8, 80% GPU memory)" data-th="Auto-batch (BATCH=0.8, ใช้ GPU memory 80%)">Auto-batch mode (BATCH=0.8, 80% GPU memory)</li>
+              <li class="added" data-en="Polygon label conversion removed (clean labels)" data-th="ลบการแปลง polygon label ออก (labels สะอาดแล้ว)">Polygon label conversion removed (clean labels)</li>
+              <li class="added" data-en="Cleaner code structure vs v4" data-th="โครงสร้างโค้ดสะอาดกว่า v4">Cleaner code structure vs v4</li>
+              <li class="added" data-en="Early stopping (patience=50) correctly halted training at ~66 epochs as val loss began diverging" data-th="Early stopping (patience=50) หยุดการเทรนที่ ~66 epochs ได้อย่างถูกต้องเมื่อ val loss เริ่มขึ้น">Early stopping (patience=50) correctly halted training at ~66 epochs as val loss began diverging</li>
+            </ul>
+          </div>
+          <div class="change-card">
+            <div class="label">🔄 <span data-en="Changes" data-th="สิ่งที่เปลี่ยนแปลง">Changes</span></div>
+            <ul>
+              <li class="changed" data-en="Model: YOLO11m → YOLO11s (10M params)" data-th="โมเดล: YOLO11m → YOLO11s (10M พารามิเตอร์)">Model: YOLO11m → YOLO11s (10M params)</li>
+              <li class="changed" data-en="Optimizer: RAdam → AdamW" data-th="ออปติไมเซอร์: RAdam → AdamW">Optimizer: RAdam → AdamW</li>
+              <li class="changed" data-en="LR0: 0.00702 → 0.000523 (much lower)" data-th="LR0: 0.00702 → 0.000523 (ลดลงมาก)">LR0: 0.00702 → 0.000523 (much lower)</li>
+              <li class="changed" data-en="Momentum: 0.091 → 0.938" data-th="โมเมนตัม: 0.091 → 0.938">Momentum: 0.091 → 0.938</li>
+              <li class="changed" data-en="Dropout: 0.113 → 0 (removed)" data-th="Dropout: 0.113 → 0 (ลบออก)">Dropout: 0.113 → 0 (removed)</li>
+              <li class="changed" data-en="degrees: 15.0 → 2 (less rotation)" data-th="degrees: 15.0 → 2 (หมุนน้อยลง)">degrees: 15.0 → 2 (less rotation)</li>
+            </ul>
+          </div>
+          <div class="change-card">
+            <div class="label">📈 <span data-en="Results vs v4" data-th="ผลลัพธ์เทียบกับ v4">Results vs v4</span></div>
+            <ul>
+              <li class="added" data-en="VAL mAP50: 0.366 → 0.483 (+32%)" data-th="VAL mAP50: 0.366 → 0.483 (+32%)">VAL mAP50: 0.366 → 0.483 (+32%)</li>
+              <li class="added" data-en="TEST mAP50: 0.376 → 0.432 (+15%)" data-th="TEST mAP50: 0.376 → 0.432 (+15%)">TEST mAP50: 0.376 → 0.432 (+15%)</li>
+              <li class="added" data-en="Manhole detection improved: 0.592 → 0.667" data-th="ตรวจจับฝาท่อดีขึ้น: 0.592 → 0.667">Manhole detection improved: 0.592 → 0.667</li>
+              <li class="added" data-en="Crack detection improved: 0.219 → 0.333" data-th="ตรวจจับรอยแตกดีขึ้น: 0.219 → 0.333">Crack detection improved: 0.219 → 0.333</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- V5 GRAPH PANEL -->
+        <div class="graph-panel">
+          <div class="graph-panel-header">
+            <span class="badge v5">v5</span>
+            <h4 data-en="Training Graphs — Results &amp; Confusion Matrix" data-th="กราฟการเทรน — ผลลัพธ์และ Confusion Matrix">Training Graphs — Results &amp; Confusion Matrix</h4>
+            <span class="graph-tag" data-en="YOLO11s · ~66 Epochs (Early Stop) · AdamW" data-th="YOLO11s · ~66 รอบ (Early Stop) · AdamW">YOLO11s · ~66 Epochs (Early Stop) · AdamW</span>
+          </div>
+          <div class="graph-panel-body">
+            <div class="graph-img-wrap">
+              <img src="v5_results.png" alt="v5 training results graph" loading="lazy" />
+              <div class="g-label" data-en="Training Curves (Losses · Precision · Recall · mAP50)" data-th="กราฟการเทรน (Loss · Precision · Recall · mAP50)">Training Curves (Losses · Precision · Recall · mAP50)</div>
+            </div>
+            <div class="graph-img-wrap">
+              <img src="v5_confusion.png" alt="v5 normalized confusion matrix" loading="lazy" />
+              <div class="g-label" data-en="Normalized Confusion Matrix (Validation)" data-th="Confusion Matrix (Validation)">Normalized Confusion Matrix (Validation)</div>
+            </div>
+          </div>
+          <div class="graph-analysis">
+            <p data-en="v5 shows <strong>dramatically improved training dynamics</strong> versus v4. The switch to YOLO11s and AdamW causes losses to converge much faster — train losses reach stable low values by epoch ~30. <strong>Early stopping triggered at ~66 epochs</strong> (out of 200 configured), meaning the model stopped learning before the set limit."
+               data-th="v5 แสดง <strong>พลวัตการเทรนที่ดีขึ้นอย่างเห็นได้ชัด</strong> เมื่อเทียบกับ v4 การเปลี่ยนมาใช้ YOLO11s และ AdamW ทำให้ loss converge เร็วขึ้นมาก — train losses ถึงค่าที่เสถียรภายใน epoch ~30 <strong>Early stopping ทำงานที่ประมาณ epoch 66</strong> (จากที่ตั้งค่าไว้ 200) แสดงว่าโมเดลหยุดเรียนรู้ก่อนถึงขีดจำกัดที่ตั้งไว้">
+              v5 shows <strong>dramatically improved training dynamics</strong> versus v4. The switch to YOLO11s and AdamW causes losses to converge much faster — train losses reach stable low values by epoch ~30. <strong>Early stopping triggered at ~66 epochs</strong> (out of 200 configured), meaning the model stopped learning before the set limit.
+            </p>
+            <p data-en="However, the <strong>val/box_loss begins rising after epoch ~40</strong> (from 2.55 up to ~2.85), and val/cls_loss also trends upward from epoch ~30 — a clear <strong>overfitting signal</strong>. The mAP50 plateau (~0.43–0.48) reflects this: precision stabilizes around 0.50–0.55 but recall flattens at 0.45, suggesting the model reached its generalization limit on this dataset with the current augmentation strategy."
+               data-th="อย่างไรก็ตาม <strong>val/box_loss เริ่มเพิ่มขึ้นหลัง epoch ~40</strong> (จาก 2.55 ขึ้นไปถึง ~2.85) และ val/cls_loss ก็มีแนวโน้มเพิ่มขึ้นจาก epoch ~30 — เป็นสัญญาณ <strong>overfitting</strong> ที่ชัดเจน mAP50 ที่ plateau (~0.43–0.48) สะท้อนสิ่งนี้: precision เสถียรที่ 0.50–0.55 แต่ recall หยุดที่ 0.45 แสดงว่าโมเดลถึงขีดจำกัดการ generalize บน dataset นี้ด้วยกลยุทธ์ augmentation ปัจจุบัน">
+              However, the <strong>val/box_loss begins rising after epoch ~40</strong> (from 2.55 up to ~2.85), and val/cls_loss also trends upward from epoch ~30 — a clear <strong>overfitting signal</strong>. The mAP50 plateau (~0.43–0.48) reflects this: the model reached its generalization limit with the current augmentation strategy (mixup, copy_paste, rotation).
+            </p>
+            <div class="obs-grid">
+              <div class="obs-item good">
+                <div class="obs-icon">✅</div>
+                <div class="obs-title" data-en="Manhole: Best recall so far (69%)" data-th="ฝาท่อ: recall ดีที่สุดเท่าที่มี (69%)">Manhole: Best recall so far (69%)</div>
+                <div class="obs-body" data-en="69% of manholes correctly detected on val — the best result to this point. Only 9% missed to background vs 27% in v4, showing the model architecture change was crucial." data-th="69% ของ manhole ถูกตรวจจับอย่างถูกต้องบน val — ดีที่สุดจนถึงตอนนี้ มีเพียง 9% ถูกจัดเป็น background เทียบกับ 27% ใน v4 แสดงให้เห็นว่าการเปลี่ยนสถาปัตยกรรมโมเดลนั้นสำคัญมาก">69% of manholes correctly detected — the best result to this point. Only 9% missed to background vs 27% in v4, showing the architecture change was crucial.</div>
+              </div>
+              <div class="obs-item good">
+                <div class="obs-icon">✅</div>
+                <div class="obs-title" data-en="Pothole: 49% recall (big jump from v4's 29%)" data-th="หลุมบ่อ: recall 49% (เพิ่มขึ้นมากจาก 29% ของ v4)">Pothole: 49% recall (big jump from v4's 29%)</div>
+                <div class="obs-body" data-en="49% correctly detected — significant improvement over v4 (29%). 43% still missed to background, showing room for improvement, but the AdamW + smaller model combination works much better." data-th="49% ตรวจจับถูกต้อง — ดีขึ้นอย่างมีนัยสำคัญจาก v4 (29%) ยังมี 43% ถูกจัดเป็น background แสดงถึงพื้นที่ที่ยังพัฒนาได้ แต่การรวม AdamW + โมเดลขนาดเล็กทำงานได้ดีกว่ามาก">49% correctly detected — significant improvement over v4 (29%). 43% still missed to background, but AdamW + smaller model combination works much better.</div>
+              </div>
+              <div class="obs-item warn">
+                <div class="obs-icon">⚠️</div>
+                <div class="obs-title" data-en="Crack: 67% miss rate (still problematic)" data-th="รอยแตก: อัตราพลาด 67% (ยังเป็นปัญหาอยู่)">Crack: 67% miss rate (still problematic)</div>
+                <div class="obs-body" data-en="67% of cracks classified as background — improved from v4's catastrophic 87%, but cracks remain by far the hardest class. Only 30% correctly detected, and 48% of background is misclassified as crack (false positives)." data-th="67% ของรอยแตกถูกจัดเป็น background — ดีขึ้นจาก 87% ของ v4 แต่รอยแตกยังคงเป็นคลาสที่ยากที่สุด มีเพียง 30% ที่ตรวจจับถูกต้อง และ 48% ของ background ถูกจัดผิดเป็น crack (false positives)">67% of cracks classified as background — improved from v4's 87%, but cracks remain the hardest class. Only 30% correctly detected.</div>
+              </div>
+              <div class="obs-item warn">
+                <div class="obs-icon">⚠️</div>
+                <div class="obs-title" data-en="Overfitting after epoch 40" data-th="Overfitting หลัง epoch 40">Overfitting after epoch 40</div>
+                <div class="obs-body" data-en="Rising val losses after epoch 40 confirm overfitting. Heavy augmentation (mixup=0.1, copy_paste=0.3) may have introduced unrealistic samples that hurt generalization — addressed in v6 by removing them." data-th="val losses เพิ่มขึ้นหลัง epoch 40 ยืนยัน overfitting Augmentation หนัก (mixup=0.1, copy_paste=0.3) อาจสร้างตัวอย่างที่ไม่สมจริง ส่งผลเสียต่อการ generalize — แก้ใน v6 โดยลบออก">Rising val losses after epoch 40 confirm overfitting. Heavy augmentation (mixup, copy_paste) may have hurt generalization — this is addressed in v6.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- V6 -->
+      <div class="timeline-item">
+        <div class="timeline-dot v6" style="background:var(--badge-v6)"></div>
+        <div class="tl-header">
+          <span class="badge v6">v6</span>
+          <h3 data-en="Simplified Augmentation + Higher Resolution + Fewer Epochs" data-th="ลด Augmentation + ความละเอียดสูงขึ้น + รอบน้อยลง">Simplified Augmentation + Higher Resolution + Fewer Epochs</h3>
+          <span class="sub">YOLO11s · 960px · AdamW · 150 Epochs · <span data-en="Minimal Augment" data-th="Augmentation น้อยลง">Minimal Augment</span></span>
+        </div>
+        <div class="change-grid">
+          <div class="change-card">
+            <div class="label">🔄 <span data-en="Changes from v5" data-th="เปลี่ยนแปลงจาก v5">Changes from v5</span></div>
+            <ul>
+              <li class="changed" data-en="Img size: 896 → 960 (higher resolution)" data-th="ขนาดภาพ: 896 → 960 (ความละเอียดสูงขึ้น)">Img size: 896 → 960 (higher resolution)</li>
+              <li class="changed" data-en="Epochs: 200 → 150" data-th="รอบการเทรน: 200 → 150">Epochs: 200 → 150</li>
+              <li class="changed" data-en="Patience: 50 → 20 (faster early stop)" data-th="Patience: 50 → 20 (หยุดเร็วขึ้น)">Patience: 50 → 20 (faster early stop)</li>
+              <li class="changed" data-en="LR0: 0.000523 → 0.001523 (higher)" data-th="LR0: 0.000523 → 0.001523 (สูงขึ้น)">LR0: 0.000523 → 0.001523 (higher)</li>
+              <li class="changed" data-en="Weight decay: 0.005 → 0.0005 (less regularization)" data-th="Weight decay: 0.005 → 0.0005 (regularization น้อยลง)">Weight decay: 0.005 → 0.0005 (less regularization)</li>
+              <li class="changed" data-en="Workers: 16 → 2 (GPU) or 0 (CPU)" data-th="Workers: 16 → 2 (GPU) หรือ 0 (CPU)">Workers: 16 → 2 (GPU) or 0 (CPU)</li>
+            </ul>
+          </div>
+          <div class="change-card">
+            <div class="label">➖ <span data-en="Removed Augmentations" data-th="Augmentation ที่ถูกลบออก">Removed Augmentations</span></div>
+            <ul>
+              <li class="removed" data-en="mixup: 0.1 → 0 (disabled)" data-th="mixup: 0.1 → 0 (ปิดใช้งาน)">mixup: 0.1 → 0 (disabled)</li>
+              <li class="removed" data-en="copy_paste: 0.3 → 0 (disabled)" data-th="copy_paste: 0.3 → 0 (ปิดใช้งาน)">copy_paste: 0.3 → 0 (disabled)</li>
+              <li class="removed" data-en="degrees: 2 → 0 (no rotation)" data-th="degrees: 2 → 0 (ไม่หมุนภาพ)">degrees: 2 → 0 (no rotation)</li>
+              <li class="removed" data-en="close_mosaic: 20 → 15" data-th="close_mosaic: 20 → 15">close_mosaic: 20 → 15</li>
+            </ul>
+          </div>
+          <div class="change-card">
+            <div class="label">🔄 <span data-en="Loss Weights" data-th="น้ำหนัก Loss">Loss Weights</span></div>
+            <ul>
+              <li class="changed" data-en="box: 9.0 → 7.5 (YOLO11 default)" data-th="box: 9.0 → 7.5 (ค่าเริ่มต้น YOLO11)">box: 9.0 → 7.5 (YOLO11 default)</li>
+              <li class="changed" data-en="cls: 0.6 → 0.5 (YOLO11 default)" data-th="cls: 0.6 → 0.5 (ค่าเริ่มต้น YOLO11)">cls: 0.6 → 0.5 (YOLO11 default)</li>
+              <li class="changed" data-en="dfl: 1.6 → 1.5 (YOLO11 default)" data-th="dfl: 1.6 → 1.5 (ค่าเริ่มต้น YOLO11)">dfl: 1.6 → 1.5 (YOLO11 default)</li>
+            </ul>
+          </div>
+          <div class="change-card">
+            <div class="label">📈 <span data-en="Results vs v5 (Test)" data-th="ผลลัพธ์เทียบกับ v5 (ทดสอบ)">Results vs v5 (Test)</span></div>
+            <ul>
+              <li class="added" data-en="TEST mAP50: 0.4316 → 0.4339 (+0.5% — thin margin)" data-th="TEST mAP50: 0.4316 → 0.4339 (+0.5% — ส่วนต่างน้อยมาก)">TEST mAP50: 0.4316 → 0.4339 (+0.5% — thin margin)</li>
+              <li class="added" data-en="Manhole precision improved: 0.596 → 0.732" data-th="ความแม่นยำฝาท่อดีขึ้น: 0.596 → 0.732">Manhole precision improved: 0.596 → 0.732</li>
+              <li class="added" data-en="Crack TEST mAP50: 0.260 → 0.263 (marginal)" data-th="Crack TEST mAP50: 0.260 → 0.263 (ใกล้เคียงกัน)">Crack TEST mAP50: 0.260 → 0.263 (marginal)</li>
+              <li class="removed" data-en="Val mAP50 at cutoff still slightly rising — patience=20 may have stopped training early" data-th="mAP50 val ยังขึ้นเล็กน้อยเมื่อหยุด — patience=20 อาจหยุดก่อนเวลา">Val mAP50 at cutoff still slightly rising — patience=20 may have stopped training early</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- V6 GRAPH PANEL -->
+        <div class="graph-panel">
+          <div class="graph-panel-header">
+            <span class="badge v6">v6</span>
+            <h4 data-en="Training Graphs — Results &amp; Confusion Matrix" data-th="กราฟการเทรน — ผลลัพธ์และ Confusion Matrix">Training Graphs — Results &amp; Confusion Matrix</h4>
+            <span class="graph-tag" data-en="YOLO11s · ~65 Epochs (Patience=20) · AdamW · 960px" data-th="YOLO11s · ~65 รอบ (Patience=20) · AdamW · 960px">YOLO11s · ~65 Epochs (Patience=20) · AdamW · 960px</span>
+          </div>
+          <div class="graph-panel-body">
+            <div class="graph-img-wrap">
+              <img src="v6_results.png" alt="v6 training results graph" loading="lazy" />
+              <div class="g-label" data-en="Training Curves (Losses · Precision · Recall · mAP50)" data-th="กราฟการเทรน (Loss · Precision · Recall · mAP50)">Training Curves (Losses · Precision · Recall · mAP50)</div>
+            </div>
+            <div class="graph-img-wrap">
+              <img src="v6_confusion.png" alt="v6 normalized confusion matrix" loading="lazy" />
+              <div class="g-label" data-en="Normalized Confusion Matrix (Validation)" data-th="Confusion Matrix (Validation)">Normalized Confusion Matrix (Validation)</div>
+            </div>
+          </div>
+          <div class="graph-analysis">
+            <p data-en="The most striking feature is the <strong>massive spike in val/cls_loss at epochs 2–3 (reaching ~20.0)</strong>, followed by a rapid drop to ~4.0 by epoch 10. This is caused by severe class imbalance in early batches — when the first few validation batches contain very few positive examples of one class, AdamW temporarily amplifies the classification error. It resolves on its own as more class examples are seen. This is not a bug; it is expected behavior with imbalanced datasets and high initial learning rates."
+               data-th="สิ่งที่น่าสังเกตที่สุดคือ <strong>การ spike ของ val/cls_loss ที่ epoch 2–3 (ถึง ~20.0)</strong> ตามด้วยการลดลงอย่างรวดเร็วไปที่ ~4.0 ภายใน epoch 10 สาเหตุมาจากความไม่สมดุลของคลาสในช่วง batch แรกๆ — เมื่อ validation batch แรกๆ มีตัวอย่างของบางคลาสน้อยมาก AdamW จะขยาย classification error ชั่วคราว ซึ่งจะค่อยๆ แก้ตัวเองเมื่อโมเดลเห็นตัวอย่างของคลาสมากขึ้น นี่ไม่ใช่ bug แต่เป็นพฤติกรรมที่คาดหวังได้กับ dataset ที่ไม่สมดุลและ learning rate เริ่มต้นสูง">
+              The most striking feature is the <strong>massive spike in val/cls_loss at epochs 2–3 (reaching ~20.0)</strong>, followed by a rapid drop to ~4.0 by epoch 10. This is caused by severe class imbalance in early batches — when the first few validation batches contain very few positive examples of one class, AdamW temporarily amplifies the classification error. It resolves on its own and is expected behavior with imbalanced datasets and high initial LR.
+            </p>
+            <p data-en="After the initial spike, training proceeds cleanly. Train losses decline steadily. Val losses stabilize after epoch ~15, with a <strong>slight upward drift in val/box_loss near the end</strong> (epochs 50–65) — a milder overfitting signal than v5. Precision stabilizes at ~0.43–0.45 and recall gradually climbs to ~0.46. <strong>The mAP50 ends at ~0.41 and shows a slight upward trend at cutoff</strong>, suggesting patience=20 stopped training slightly before convergence. Despite this, the <strong>test mAP50 (0.4339) marginally beats v5 (0.4316)</strong>, indicating that simplifying augmentation and raising resolution improved generalization."
+               data-th="หลังจาก spike เริ่มต้น การเทรนดำเนินต่อไปอย่างราบรื่น Train losses ลดลงอย่างสม่ำเสมอ Val losses เสถียรหลัง epoch ~15 โดยมี <strong>drift ขึ้นเล็กน้อยของ val/box_loss ใกล้จบ</strong> (epochs 50–65) — สัญญาณ overfitting ที่อ่อนกว่า v5 Precision เสถียรที่ ~0.43–0.45 และ recall ค่อยๆ เพิ่มขึ้นถึง ~0.46 <strong>mAP50 จบที่ ~0.41 และยังมีแนวโน้มขึ้นเล็กน้อย ณ จุดตัด</strong> แสดงว่า patience=20 หยุดเทรนก่อน convergence เล็กน้อย แม้จะเป็นเช่นนั้น <strong>test mAP50 (0.4339) ยังชนะ v5 (0.4316) เล็กน้อย</strong> แสดงให้เห็นว่าการทำ augmentation ให้เรียบง่ายและเพิ่ม resolution ช่วยให้ generalization ดีขึ้น">
+              After the initial spike, training proceeds cleanly. Train losses decline steadily. Val losses stabilize after epoch ~15 with a <strong>slight upward drift in val/box_loss near the end</strong> — a milder overfitting signal than v5. <strong>The mAP50 ends at ~0.41 with a slight upward trend at cutoff</strong>, suggesting patience=20 stopped training slightly before convergence. Despite this, <strong>test mAP50 (0.4339) marginally beats v5 (0.4316)</strong> — simpler augmentation and higher resolution improved generalization.
+            </p>
+            <div class="obs-grid">
+              <div class="obs-item warn">
+                <div class="obs-icon">⚠️</div>
+                <div class="obs-title" data-en="Crack: 67% miss rate (unchanged from v5)" data-th="รอยแตก: อัตราพลาด 67% (เท่ากับ v5)">Crack: 67% miss rate (unchanged from v5)</div>
+                <div class="obs-body" data-en="67% of cracks still classified as background — same as v5, with 31% correctly detected. Higher resolution (960px) gave a marginal improvement in crack TEST mAP50 (0.260 → 0.263) but did not fundamentally solve the crack detection problem." data-th="67% ของรอยแตกยังถูกจัดเป็น background — เท่ากับ v5 โดยมี 31% ที่ตรวจจับถูกต้อง ความละเอียดสูงขึ้น (960px) ให้ผลปรับปรุงเล็กน้อยใน crack TEST mAP50 (0.260 → 0.263) แต่ไม่ได้แก้ปัญหาการตรวจจับรอยแตกโดยพื้นฐาน">67% of cracks still classified as background — same as v5. Higher resolution gave a marginal improvement in crack TEST mAP50 (0.260 → 0.263) but did not fundamentally solve the problem.</div>
+              </div>
+              <div class="obs-item warn">
+                <div class="obs-icon">⚠️</div>
+                <div class="obs-title" data-en="Manhole: 58% recall (declined from v5's 69%)" data-th="ฝาท่อ: recall 58% (ลดลงจาก 69% ของ v5)">Manhole: 58% recall (declined from v5's 69%)</div>
+                <div class="obs-body" data-en="Manhole recall dropped from 69% (v5) to 58%, with 31% missing to background. The faster early stop (patience=20) likely prevented the model from fully learning the manhole class distribution at 960px." data-th="Manhole recall ลดลงจาก 69% (v5) เหลือ 58% โดยมี 31% หลุดไปเป็น background การหยุดเร็วขึ้น (patience=20) อาจทำให้โมเดลยังเรียนรู้การกระจายของ manhole ที่ 960px ไม่เต็มที่">Manhole recall dropped from 69% (v5) to 58%, with 31% missing to background. The faster early stop (patience=20) likely prevented full learning at 960px.</div>
+              </div>
+              <div class="obs-item good">
+                <div class="obs-icon">✅</div>
+                <div class="obs-title" data-en="Pothole: 36% recall (lower but more precise)" data-th="หลุมบ่อ: recall 36% (ลดลงแต่แม่นยำขึ้น)">Pothole: 36% recall (lower than v5's 49%)</div>
+                <div class="obs-body" data-en="Pothole recall is lower (36% vs 49% in v5), but background confusion dropped — 29% to background vs 44% in v5. The model is more conservative but less likely to generate false positives." data-th="Pothole recall ต่ำกว่า (36% vs 49% ใน v5) แต่ความสับสนกับ background ลดลง — 29% vs 44% ใน v5 โมเดลระมัดระวังมากขึ้นแต่มีโอกาส false positive น้อยลง">Pothole recall dropped (36% vs 49% in v5), but background confusion also dropped — 29% to background vs 44% in v5, suggesting the model is more conservative.</div>
+              </div>
+              <div class="obs-item info">
+                <div class="obs-icon">💡</div>
+                <div class="obs-title" data-en="Test performance beats val performance" data-th="ผลการทดสอบดีกว่า val">Test performance beats val performance</div>
+                <div class="obs-body" data-en="v6 test mAP50 (0.4339) > v6 val mAP50 (0.4584 on same split) but the key is test > v5's test (0.4316). Simplifying augmentation removed noise that prevented generalization, explaining why this minimal-augment model edges out the heavily-augmented v5." data-th="test mAP50 ของ v6 (0.4339) ชนะ test mAP50 ของ v5 (0.4316) การทำ augmentation ให้เรียบง่ายลบ noise ที่ขัดขวางการ generalize ออกไป อธิบายว่าทำไมโมเดลที่ augment น้อยกว่าถึงชนะโมเดลที่ augment มากกว่า">v6 test mAP50 (0.4339) edges out v5 (0.4316). Removing heavy augmentation (mixup, copy_paste) eliminated noise that was hurting generalization to the test set.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===== METRICS ===== -->
+<section id="metrics">
+  <div class="container">
+    <div class="section-header">
+      <h2><span class="icon">📐</span> <span data-en="Detailed Metrics Comparison" data-th="เปรียบเทียบผลลัพธ์โดยละเอียด">Detailed Metrics Comparison</span></h2>
+      <p data-en="Per-class precision, recall, F1, and mAP50 across all versions."
+         data-th="ค่า Precision, Recall, F1 และ mAP50 แยกตามคลาสในทุกเวอร์ชัน">
+        Per-class precision, recall, F1, and mAP50 across all versions.
+      </p>
+    </div>
+
+    <h3 style="font-size:15px;color:var(--text-muted);margin-bottom:12px;font-weight:700;">
+      🔵 <span data-en="Overall mAP50 (Validation Set)" data-th="mAP50 โดยรวม (ชุดตรวจสอบ)">Overall mAP50 (Validation Set)</span>
+    </h3>
+    <div class="metrics-wrap" style="margin-bottom:32px;">
+      <table class="metrics">
+        <thead>
+          <tr>
+            <th data-en="Version"        data-th="เวอร์ชัน">Version</th>
+            <th data-en="Model"          data-th="โมเดล">Model</th>
+            <th data-en="Precision"      data-th="ความแม่นยำ">Precision</th>
+            <th data-en="Recall"         data-th="Recall">Recall</th>
+            <th data-en="mAP50 (All)"    data-th="mAP50 (ทั้งหมด)">mAP50 (All)</th>
+            <th data-en="mAP50-95"       data-th="mAP50-95">mAP50-95</th>
+            <th data-en="Eval Set"       data-th="ชุดประเมิน">Eval Set</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="badge v1">v1</span></td><td>YOLO11s</td>
+            <td class="num">0.6542</td><td class="num">0.4554</td>
+            <td class="num">0.5670</td><td class="num">0.2984</td>
+            <td data-en="Val (=Train)" data-th="Val (=Train, ชุดเดียวกัน)">Val (=Train)</td>
+          </tr>
+          <tr>
+            <td><span class="badge v2">v2</span></td><td>YOLO11n</td>
+            <td class="num">0.421</td><td class="num">0.422</td>
+            <td class="num worst">0.391</td><td class="num worst">0.151</td>
+            <td data-en="Val (985 imgs)" data-th="Val (985 ภาพ)">Val (985 imgs)</td>
+          </tr>
+          <tr>
+            <td><span class="badge v3">v3</span></td><td>YOLO11s</td>
+            <td class="num">0.834</td><td class="num">0.628</td>
+            <td class="num best">0.711</td><td class="num best">0.370</td>
+            <td data-en="Val (15 imgs)*" data-th="Val (15 ภาพ)*">Val (15 imgs)*</td>
+          </tr>
+          <tr>
+            <td><span class="badge v4">v4</span></td><td>YOLO11m</td>
+            <td class="num">0.360</td><td class="num">0.449</td>
+            <td class="num">0.366</td><td class="num">0.138</td>
+            <td data-en="Val (294 imgs)" data-th="Val (294 ภาพ)">Val (294 imgs)</td>
+          </tr>
+          <tr>
+            <td><span class="badge v5">v5</span></td><td>YOLO11s</td>
+            <td class="num">0.576</td><td class="num">0.474</td>
+            <td class="num">0.483</td><td class="num">0.206</td>
+            <td data-en="Val (294 imgs)" data-th="Val (294 ภาพ)">Val (294 imgs)</td>
+          </tr>
+          <tr>
+            <td><span class="badge v6">v6</span></td><td>YOLO11s</td>
+            <td class="num">0.503</td><td class="num">0.457</td>
+            <td class="num">0.458</td><td class="num">0.190</td>
+            <td data-en="Val (294 imgs)" data-th="Val (294 ภาพ)">Val (294 imgs)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 style="font-size:15px;color:var(--text-muted);margin-bottom:12px;font-weight:700;">
+      🟢 <span data-en="TEST SET mAP50 (Comparable Versions: v3–v6)" data-th="mAP50 ชุดทดสอบ (เวอร์ชันที่เปรียบเทียบได้: v3–v6)">TEST SET mAP50 (Comparable Versions: v3–v6)</span>
+    </h3>
+    <div class="metrics-wrap" style="margin-bottom:32px;">
+      <table class="metrics">
+        <thead>
+          <tr>
+            <th data-en="Version"         data-th="เวอร์ชัน">Version</th>
+            <th data-en="TEST mAP50"      data-th="TEST mAP50">TEST mAP50</th>
+            <th data-en="TEST mAP50-95"   data-th="TEST mAP50-95">TEST mAP50-95</th>
+            <th data-en="Pothole mAP50"   data-th="หลุมบ่อ mAP50">Pothole mAP50</th>
+            <th data-en="Crack mAP50"     data-th="รอยแตก mAP50">Crack mAP50</th>
+            <th data-en="Manhole mAP50"   data-th="ฝาท่อ mAP50">Manhole mAP50</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="badge v3">v3</span></td>
+            <td class="num best">0.7171</td><td class="num">0.280</td>
+            <td class="num">0.705</td><td class="num">0.451</td><td class="num best">0.995</td>
+          </tr>
+          <tr>
+            <td><span class="badge v4">v4</span></td>
+            <td class="num worst">0.3757</td><td class="num">0.149</td>
+            <td class="num worst">0.322</td><td class="num worst">0.183</td><td class="num">0.622</td>
+          </tr>
+          <tr>
+            <td><span class="badge v5">v5</span></td>
+            <td class="num">0.4316</td><td class="num">0.174</td>
+            <td class="num">0.355</td><td class="num">0.260</td><td class="num">0.680</td>
+          </tr>
+          <tr class="hl">
+            <td><span class="badge v6">v6</span></td>
+            <td class="num best">0.4339</td><td class="num best">0.170</td>
+            <td class="num best">0.359</td><td class="num best">0.263</td><td class="num">0.680</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 style="font-size:15px;color:var(--text-muted);margin-bottom:12px;font-weight:700;">
+      📋 <span data-en="Per-Class Detail (Validation — Comparable at Scale)" data-th="รายละเอียดแยกคลาส (Val — เวอร์ชันที่เทียบกันได้)">Per-Class Detail (Validation — Comparable at Scale)</span>
+    </h3>
+    <div class="metrics-wrap">
+      <table class="metrics">
+        <thead>
+          <tr>
+            <th data-en="Version" data-th="เวอร์ชัน">Version</th>
+            <th data-en="Class"   data-th="คลาส">Class</th>
+            <th data-en="Precision" data-th="ความแม่นยำ">Precision</th>
+            <th data-en="Recall"    data-th="Recall">Recall</th>
+            <th data-en="mAP50"     data-th="mAP50">mAP50</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td rowspan="3"><span class="badge v1">v1</span></td>
+              <td data-en="Pothole" data-th="หลุมบ่อ">Pothole</td><td class="num">0.6499</td><td class="num">0.3577</td><td class="num">0.5045</td></tr>
+          <tr><td data-en="Crack"   data-th="รอยแตกร้าว">Crack</td><td class="num">0.5843</td><td class="num">0.2489</td><td class="num">0.4083</td></tr>
+          <tr style="border-bottom:2px solid var(--border)"><td data-en="Manhole" data-th="ฝาท่อ">Manhole</td><td class="num">0.7285</td><td class="num">0.7597</td><td class="num best">0.7882</td></tr>
+          <tr><td rowspan="3"><span class="badge v4">v4</span></td>
+              <td data-en="Pothole" data-th="หลุมบ่อ">Pothole</td><td class="num">0.338</td><td class="num">0.400</td><td class="num worst">0.288</td></tr>
+          <tr><td data-en="Crack"   data-th="รอยแตกร้าว">Crack</td><td class="num">0.376</td><td class="num">0.218</td><td class="num worst">0.219</td></tr>
+          <tr style="border-bottom:2px solid var(--border)"><td data-en="Manhole" data-th="ฝาท่อ">Manhole</td><td class="num">0.366</td><td class="num">0.727</td><td class="num">0.592</td></tr>
+          <tr><td rowspan="3"><span class="badge v5">v5</span></td>
+              <td data-en="Pothole" data-th="หลุมบ่อ">Pothole</td><td class="num">0.494</td><td class="num">0.487</td><td class="num">0.449</td></tr>
+          <tr><td data-en="Crack"   data-th="รอยแตกร้าว">Crack</td><td class="num">0.566</td><td class="num">0.254</td><td class="num">0.333</td></tr>
+          <tr style="border-bottom:2px solid var(--border)"><td data-en="Manhole" data-th="ฝาท่อ">Manhole</td><td class="num">0.668</td><td class="num">0.682</td><td class="num">0.667</td></tr>
+          <tr><td rowspan="3"><span class="badge v6">v6</span></td>
+              <td data-en="Pothole" data-th="หลุมบ่อ">Pothole</td><td class="num">0.434</td><td class="num">0.422</td><td class="num">0.402</td></tr>
+          <tr><td data-en="Crack"   data-th="รอยแตกร้าว">Crack</td><td class="num">0.480</td><td class="num">0.323</td><td class="num">0.338</td></tr>
+          <tr><td data-en="Manhole" data-th="ฝาท่อ">Manhole</td><td class="num">0.595</td><td class="num">0.625</td><td class="num best">0.635</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CHARTS ===== -->
+<section id="charts">
+  <div class="container">
+    <div class="section-header">
+      <h2><span class="icon">📊</span> <span data-en="Visual Charts" data-th="กราฟแสดงผล">Visual Charts</span></h2>
+      <p data-en="Comparing mAP50 scores per version and per class on the test set."
+         data-th="เปรียบเทียบค่า mAP50 ในแต่ละเวอร์ชันและแต่ละคลาสบนชุดทดสอบ">
+        Comparing mAP50 scores per version and per class on the test set.
+      </p>
+    </div>
+    <div class="bar-section">
+
+      <div class="bar-group">
+        <h3 data-en="Overall mAP50 — Validation Set (v4–v6, same data scale)"
+            data-th="mAP50 โดยรวม — ชุดตรวจสอบ (v4–v6, ขนาดข้อมูลเท่ากัน)">
+          Overall mAP50 — Validation Set (v4–v6, same data scale)
+        </h3>
+        <div class="bar-row">
+          <div class="bar-label"><span class="badge v4">v4</span></div>
+          <div class="bar-track"><div class="bar-fill bar-v4" style="width:75.3%">0.366</div></div>
+          <div class="bar-val">0.366</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label"><span class="badge v5">v5</span></div>
+          <div class="bar-track"><div class="bar-fill bar-v5" style="width:99.4%">0.483</div></div>
+          <div class="bar-val">0.483</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label"><span class="badge v6">v6</span></div>
+          <div class="bar-track"><div class="bar-fill bar-v6" style="width:94.2%">0.458</div></div>
+          <div class="bar-val">0.458</div>
+        </div>
+      </div>
+
+      <div class="bar-group">
+        <h3 data-en="Overall mAP50 — Test Set (v4–v6)"
+            data-th="mAP50 โดยรวม — ชุดทดสอบ (v4–v6)">
+          Overall mAP50 — Test Set (v4–v6)
+        </h3>
+        <div class="bar-row">
+          <div class="bar-label"><span class="badge v4">v4</span></div>
+          <div class="bar-track"><div class="bar-fill bar-v4" style="width:86.5%">0.376</div></div>
+          <div class="bar-val">0.376</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label"><span class="badge v5">v5</span></div>
+          <div class="bar-track"><div class="bar-fill bar-v5" style="width:99.5%">0.432</div></div>
+          <div class="bar-val">0.432</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label"><span class="badge v6">v6</span></div>
+          <div class="bar-track"><div class="bar-fill bar-v6" style="width:100%">0.434</div></div>
+          <div class="bar-val">0.434</div>
+        </div>
+      </div>
+
+      <div class="bar-group">
+        <h3 data-en="Per-Class mAP50 on TEST SET — v6 (Best Fair Model)"
+            data-th="mAP50 แยกคลาส ชุดทดสอบ — v6 (โมเดลที่ดีที่สุดในการเปรียบเทียบที่ยุติธรรม)">
+          Per-Class mAP50 on TEST SET — <span class="badge v6">v6</span>
+        </h3>
+        <div class="bar-row">
+          <div class="bar-label" style="width:72px;font-size:11px" data-en="Pothole" data-th="หลุมบ่อ">Pothole</div>
+          <div class="bar-track"><div class="bar-fill bar-pothole" style="width:52.8%">0.359</div></div>
+          <div class="bar-val">0.359</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label" style="width:72px;font-size:11px" data-en="Crack" data-th="รอยแตก">Crack</div>
+          <div class="bar-track"><div class="bar-fill bar-crack" style="width:38.7%">0.263</div></div>
+          <div class="bar-val">0.263</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label" style="width:72px;font-size:11px" data-en="Manhole" data-th="ฝาท่อ">Manhole</div>
+          <div class="bar-track"><div class="bar-fill bar-manhole" style="width:100%">0.680</div></div>
+          <div class="bar-val">0.680</div>
+        </div>
+      </div>
+
+      <div class="bar-group">
+        <h3 data-en="mAP50 Evolution Across All Versions (Val)"
+            data-th="วิวัฒนาการ mAP50 ในทุกเวอร์ชัน (Val)">
+          mAP50 Evolution Across All Versions (Val)
+        </h3>
+        <div class="bar-row">
+          <div class="bar-label"><span class="badge v1">v1</span></div>
+          <div class="bar-track"><div class="bar-fill bar-v1" style="width:79.6%">0.567*</div></div>
+          <div class="bar-val">0.567*</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label"><span class="badge v2">v2</span></div>
+          <div class="bar-track"><div class="bar-fill bar-v2" style="width:54.9%">0.391</div></div>
+          <div class="bar-val">0.391</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label"><span class="badge v3">v3</span></div>
+          <div class="bar-track"><div class="bar-fill bar-v3" style="width:100%">0.711†</div></div>
+          <div class="bar-val">0.711†</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label"><span class="badge v4">v4</span></div>
+          <div class="bar-track"><div class="bar-fill bar-v4" style="width:51.5%">0.366</div></div>
+          <div class="bar-val">0.366</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label"><span class="badge v5">v5</span></div>
+          <div class="bar-track"><div class="bar-fill bar-v5" style="width:67.9%">0.483</div></div>
+          <div class="bar-val">0.483</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label"><span class="badge v6">v6</span></div>
+          <div class="bar-track"><div class="bar-fill bar-v6" style="width:64.4%">0.458</div></div>
+          <div class="bar-val">0.458</div>
+        </div>
+        <p class="note" data-en="* v1 uses train=val (inflated). † v3 uses only 15 val images (inflated)."
+                        data-th="* v1 ใช้ train=val (ผลสูงเกินจริง). † v3 ใช้ val เพียง 15 ภาพ (ผลสูงเกินจริง)">
+          * v1 uses train=val (inflated). † v3 uses only 15 val images (inflated).
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===== ACCURACY IMAGES ===== -->
+<section id="accuracy-images">
+  <div class="container">
+    <div class="section-header">
+      <h2><span class="icon">🖼️</span> <span data-en="Accuracy Output Screenshots" data-th="ภาพหน้าจอผลการประเมิน">Accuracy Output Screenshots</span></h2>
+      <p data-en="Raw terminal output from each model's evaluation showing precision, recall, and mAP metrics."
+         data-th="ผลลัพธ์จาก terminal ของการประเมินแต่ละโมเดล แสดงค่า precision, recall และ mAP">
+        Raw terminal output from each model's evaluation showing precision, recall, and mAP metrics.
+      </p>
+    </div>
+    <div class="img-grid">
+      <div class="img-card">
+        <div class="img-card-header">
+          <span class="badge v1">v1</span>
+          <h3 data-en="Baseline — YOLO11s · 640px" data-th="ตั้งต้น — YOLO11s · 640px">Baseline — YOLO11s · 640px</h3>
+          <span class="map-pill">mAP50: 0.567*</span>
+        </div>
+        <img src="v1.png" alt="v1 accuracy output" loading="lazy" />
+      </div>
+      <div class="img-card">
+        <div class="img-card-header">
+          <span class="badge v2">v2</span>
+          <h3 data-en="GPU Auto-detect — YOLO11n · 800px" data-th="ตรวจ GPU อัตโนมัติ — YOLO11n · 800px">GPU Auto-detect — YOLO11n · 800px</h3>
+          <span class="map-pill">mAP50: 0.391</span>
+        </div>
+        <img src="v2.png" alt="v2 accuracy output" loading="lazy" />
+      </div>
+      <div class="img-card">
+        <div class="img-card-header">
+          <span class="badge v3">v3</span>
+          <h3 data-en="K-Fold CV — YOLO11s · 896px" data-th="K-Fold CV — YOLO11s · 896px">K-Fold CV — YOLO11s · 896px</h3>
+          <span class="map-pill">mAP50: 0.711†</span>
+        </div>
+        <img src="v3.png" alt="v3 accuracy output" loading="lazy" />
+      </div>
+      <div class="img-card">
+        <div class="img-card-header">
+          <span class="badge v4">v4</span>
+          <h3 data-en="Full Pipeline — YOLO11m · 896px" data-th="Pipeline เต็มรูปแบบ — YOLO11m · 896px">Full Pipeline — YOLO11m · 896px</h3>
+          <span class="map-pill">mAP50: 0.376</span>
+        </div>
+        <img src="v4.png" alt="v4 accuracy output" loading="lazy" />
+      </div>
+      <div class="img-card">
+        <div class="img-card-header">
+          <span class="badge v5">v5</span>
+          <h3 data-en="AdamW + Auto-Batch — YOLO11s · 896px" data-th="AdamW + Auto-Batch — YOLO11s · 896px">AdamW + Auto-Batch — YOLO11s · 896px</h3>
+          <span class="map-pill">mAP50: 0.432 (test)</span>
+        </div>
+        <img src="v5.png" alt="v5 accuracy output" loading="lazy" />
+      </div>
+      <div class="img-card">
+        <div class="img-card-header">
+          <span class="badge v6">v6</span>
+          <h3 data-en="Simplified Augment — YOLO11s · 960px" data-th="Augmentation ลดลง — YOLO11s · 960px">Simplified Augment — YOLO11s · 960px</h3>
+          <span class="map-pill">mAP50: 0.434 (test)</span>
+        </div>
+        <img src="v6.png" alt="v6 accuracy output" loading="lazy" />
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== VERDICT ===== -->
+<section id="verdict">
+  <div class="container">
+    <div class="section-header">
+      <h2><span class="icon">🏆</span> <span data-en="Conclusion &amp; Verdict" data-th="บทสรุปและคำตัดสิน">Conclusion &amp; Verdict</span></h2>
+      <p data-en="Which model performs best, and why."
+         data-th="โมเดลใดทำงานได้ดีที่สุด และเพราะเหตุใด">
+        Which model performs best, and why.
+      </p>
+    </div>
+
+    <div class="verdict-box">
+      <h3>
+        🥇 <span data-en="Best Overall Model:" data-th="โมเดลที่ดีที่สุดโดยรวม:">Best Overall Model:</span>
+        <span class="badge v6" style="font-size:16px">v6</span>
+        <span style="font-size:14px;color:var(--text-muted);" data-en="(Fairly Evaluated)" data-th="(ประเมินอย่างยุติธรรม)">(Fairly Evaluated)</span>
+      </h3>
+      <p style="color:var(--text-muted);line-height:1.9;"
+         data-en="Among versions evaluated on a <strong>consistent, properly split dataset</strong> (75/15/10 group-aware split, 229-image test set), <strong>v6</strong> achieves the highest test-set mAP50 of <strong>0.4339</strong> and the best manhole precision of <strong>0.732</strong>. It uses <strong>YOLO11s</strong> (lightweight 10M params) with higher resolution (960px), <strong>AdamW</strong> optimizer, and a clean, minimal augmentation strategy that avoids over-augmenting road texture — making it the most reliable and practically deployable model."
+         data-th="ในบรรดาเวอร์ชันที่ประเมินบน <strong>ชุดข้อมูลที่แบ่งอย่างถูกต้องและสม่ำเสมอ</strong> (แบ่งแบบ group-aware 75/15/10, ชุดทดสอบ 229 ภาพ), <strong>v6</strong> ทำได้ mAP50 สูงที่สุดบนชุดทดสอบที่ <strong>0.4339</strong> และมี precision สำหรับฝาท่อสูงที่สุดที่ <strong>0.732</strong> โมเดลนี้ใช้ <strong>YOLO11s</strong> (ขนาดเล็ก 10M พารามิเตอร์) กับความละเอียดภาพสูงขึ้น (960px), <strong>AdamW</strong> optimizer และกลยุทธ์ augmentation ที่เรียบง่าย ทำให้เป็นโมเดลที่เชื่อถือได้และนำไปใช้งานได้จริงมากที่สุด">
+        Among versions evaluated on a <strong>consistent, properly split dataset</strong> (75/15/10 group-aware split, 229-image test set), <strong>v6</strong> achieves the highest test-set mAP50 of <strong>0.4339</strong> and the best manhole precision of <strong>0.732</strong>. It uses <strong>YOLO11s</strong> (lightweight 10M params) with higher resolution (960px), <strong>AdamW</strong> optimizer, and a clean, minimal augmentation strategy.
+      </p>
+      <div class="verdict-grid">
+        <div class="verdict-item">
+          <div class="v-label" data-en="Test mAP50" data-th="Test mAP50">Test mAP50</div>
+          <div class="v-val" style="color:var(--accent2)">0.4339</div>
+          <div class="v-sub" data-en="Best among fair evaluations" data-th="ดีที่สุดในการเปรียบเทียบที่ยุติธรรม">Best among fair evaluations</div>
+        </div>
+        <div class="verdict-item">
+          <div class="v-label" data-en="Model Size" data-th="ขนาดโมเดล">Model Size</div>
+          <div class="v-val" style="color:var(--accent)">YOLO11s</div>
+          <div class="v-sub">9.4M params · 21.4 GFLOPs</div>
+        </div>
+        <div class="verdict-item">
+          <div class="v-label" data-en="Resolution" data-th="ความละเอียด">Resolution</div>
+          <div class="v-val" style="color:var(--accent)">960 px</div>
+          <div class="v-sub" data-en="Highest across all versions" data-th="สูงสุดในทุกเวอร์ชัน">Highest across all versions</div>
+        </div>
+        <div class="verdict-item">
+          <div class="v-label" data-en="Manhole Precision" data-th="ความแม่นยำฝาท่อ">Manhole Precision</div>
+          <div class="v-val" style="color:var(--accent2)">0.732</div>
+          <div class="v-sub" data-en="Best manhole detection (test)" data-th="ตรวจจับฝาท่อได้ดีที่สุด (test)">Best manhole detection (test)</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="runner-up-box orange">
+      <h4>🥈 <span data-en="Runner-up:" data-th="อันดับสอง:">Runner-up:</span> <span class="badge v5">v5</span> — <span data-en="Close second (test mAP50: 0.4316)" data-th="ตามมาติดๆ (test mAP50: 0.4316)">Close second (test mAP50: 0.4316)</span></h4>
+      <p style="color:var(--text-muted);font-size:13px;margin-top:6px;"
+         data-en="v5 scores nearly identically to v6 on the test set. It uses more augmentation (mixup=0.1, copy_paste=0.3, degrees=2) which can help generalize but may have slightly hurt the test score. It's a valid alternative if you want more augmentation diversity."
+         data-th="v5 ทำคะแนนได้ใกล้เคียงกับ v6 มากบนชุดทดสอบ ใช้ augmentation มากกว่า (mixup=0.1, copy_paste=0.3, degrees=2) ซึ่งอาจช่วยให้โมเดล generalize ได้ดีขึ้น แต่อาจส่งผลเล็กน้อยต่อ test score เป็นตัวเลือกที่ดีหากต้องการความหลากหลายของ augmentation">
+        v5 scores nearly identically to v6 on the test set. It uses more augmentation (mixup=0.1, copy_paste=0.3, degrees=2) which can help generalize but may have slightly hurt the test score.
+      </p>
+    </div>
+
+    <div class="runner-up-box purple">
+      <h4>⚠️ <span data-en="Note on v3: Highest Raw mAP50 (0.711) — not directly comparable" data-th="หมายเหตุ v3: mAP50 ดิบสูงที่สุด (0.711) — ไม่สามารถเทียบตรงๆ ได้">Note on v3: Highest Raw mAP50 (0.711) — not directly comparable</span></h4>
+      <p style="color:var(--text-muted);font-size:13px;margin-top:6px;"
+         data-en="v3 used K-Fold CV and achieved 0.711 mAP50 on a 15-image val set and 0.717 on a 12-image test set. These are extremely small evaluation sets and should not be compared directly with v4–v6. If v3 is re-evaluated on a larger held-out set, it may prove superior — the group-aware deduplication and K-Fold strategy are methodologically sound."
+         data-th="v3 ใช้ K-Fold CV และได้ 0.711 mAP50 บน val set 15 ภาพ และ 0.717 บน test set 12 ภาพ ซึ่งเป็นชุดประเมินที่เล็กมากและไม่ควรเทียบตรงๆ กับ v4–v6 หาก v3 ถูกประเมินใหม่บน hold-out set ขนาดใหญ่กว่า อาจพิสูจน์ได้ว่าดีกว่า — กลยุทธ์ group-aware deduplication และ K-Fold นั้นถูกต้องทางวิธีวิทยา">
+        v3 used K-Fold CV and achieved 0.711 mAP50 on a 15-image val set. These are extremely small evaluation sets and should not be compared directly with v4–v6. If v3 is re-evaluated on a larger held-out set, it may prove superior.
+      </p>
+    </div>
+
+    <div style="margin-top:36px;">
+      <h3 style="font-size:17px;margin-bottom:16px;font-weight:700;" data-en="📝 Key Lessons Learned Across Versions" data-th="📝 บทเรียนสำคัญที่ได้จากทุกเวอร์ชัน">📝 Key Lessons Learned Across Versions</h3>
+      <div class="change-grid">
+        <div class="change-card">
+          <div class="label">✅ <span data-en="What Worked" data-th="สิ่งที่ได้ผลดี">What Worked</span></div>
+          <ul>
+            <li class="added" data-en="Group-aware train/val/test split (prevents data leakage)" data-th="แบ่งข้อมูลแบบ group-aware (ป้องกันข้อมูลรั่วไหล)">Group-aware train/val/test split</li>
+            <li class="added" data-en="AdamW optimizer outperforms RAdam at this scale" data-th="AdamW ดีกว่า RAdam ในขนาดนี้">AdamW outperforms RAdam at this scale</li>
+            <li class="added" data-en="YOLO11s outperforms YOLO11m (less overfitting)" data-th="YOLO11s ดีกว่า YOLO11m (overfitting น้อยกว่า)">YOLO11s outperforms YOLO11m on small datasets</li>
+            <li class="added" data-en="Higher resolution (896→960px) improved quality" data-th="ความละเอียดสูงขึ้น (896→960px) ปรับปรุงคุณภาพ">Higher resolution (896→960px) improved quality</li>
+            <li class="added" data-en="Auto-batch (0.8) maximizes GPU utilization" data-th="Auto-batch (0.8) ใช้ GPU ได้เต็มที่">Auto-batch (0.8) maximizes GPU utilization</li>
+            <li class="added" data-en="Minimal augmentation works better than heavy augmentation" data-th="Augmentation น้อยทำงานได้ดีกว่า heavy augmentation">Minimal augmentation &gt; heavy augmentation here</li>
+          </ul>
+        </div>
+        <div class="change-card">
+          <div class="label">❌ <span data-en="What Didn't Work" data-th="สิ่งที่ไม่ได้ผล">What Didn't Work</span></div>
+          <ul>
+            <li class="removed" data-en="Train=Val setup (v1): inflated, misleading metrics" data-th="ใช้ train=val (v1): ผลสูงเกินจริง ทำให้เข้าใจผิด">Train=Val setup (v1): inflated metrics</li>
+            <li class="removed" data-en="Scaling to YOLO11m (v4): much worse results" data-th="ขยายเป็น YOLO11m (v4): ผลลัพธ์แย่ลงมาก">Scaling to YOLO11m (v4): much worse results</li>
+            <li class="removed" data-en="Heavy augmentation (copy_paste + mixup + rotation) hurt v4/v5" data-th="Augmentation หนัก (copy_paste + mixup + rotation) ส่งผลเสียต่อ v4/v5">Heavy augmentation hurt v4/v5</li>
+            <li class="removed" data-en="RAdam with high momentum (v4): suboptimal convergence" data-th="RAdam กับ momentum สูง (v4): การ convergence ไม่ดีพอ">RAdam + high momentum (v4): suboptimal convergence</li>
+            <li class="removed" data-en="Large batch (32, v4): may have contributed to underfitting" data-th="Batch ขนาดใหญ่ (32, v4): อาจส่งผลให้ underfitting">Large batch size (32, v4): potential underfitting</li>
+          </ul>
+        </div>
+        <div class="change-card">
+          <div class="label">🚀 <span data-en="Recommended Next Steps" data-th="ขั้นตอนถัดไปที่แนะนำ">Recommended Next Steps</span></div>
+          <ul>
+            <li data-en="Re-evaluate v3 K-Fold on a larger holdout set" data-th="ประเมิน v3 K-Fold ใหม่บน holdout set ขนาดใหญ่">Re-evaluate v3 K-Fold on a larger holdout set</li>
+            <li data-en="Try YOLO11s-p2 (small head for tiny objects like cracks)" data-th="ลอง YOLO11s-p2 (head เล็กสำหรับวัตถุขนาดเล็กเช่นรอยแตก)">Try YOLO11s-p2 for better crack detection</li>
+            <li data-en="Use Optuna to tune LR on the full dataset" data-th="ใช้ Optuna ปรับ LR บน dataset ทั้งหมด">Optuna LR tuning on full dataset</li>
+            <li data-en="Explore weighted sampling for underrepresented crack class" data-th="ลอง weighted sampling สำหรับคลาส crack ที่มีตัวอย่างน้อย">Weighted sampling for crack class imbalance</li>
+            <li data-en="Combine v3 K-Fold methodology with v6 hyperparameters" data-th="รวมวิธี K-Fold ของ v3 กับ hyperparameter ของ v6">Combine v3 K-Fold + v6 hyperparameters</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <span data-en="Road Damage Detection · YOLO11 Series · Pothole · Crack · Manhole | v1–v6 Comparison Report | Generated 2026-09-25"
+          data-th="การตรวจจับความเสียหายบนถนน · ชุด YOLO11 · หลุมบ่อ · รอยแตกร้าว · ฝาท่อ | รายงานเปรียบเทียบ v1–v6 | สร้างเมื่อ 25-09-2026">
+      Road Damage Detection · YOLO11 Series · Pothole · Crack · Manhole &nbsp;|&nbsp; v1–v6 Comparison Report &nbsp;|&nbsp; Generated 2026-09-25
+    </span>
+  </div>
+</footer>
+
+<!-- ===== LANGUAGE SWITCH SCRIPT ===== -->
+<script>
+  let currentLang = localStorage.getItem('rdLang') || 'en';
+
+  function setLang(lang) {
+    currentLang = lang;
+    localStorage.setItem('rdLang', lang);
+
+    // Toggle html lang attribute
+    document.getElementById('html-root').lang = lang;
+
+    // Toggle button states
+    document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+    document.getElementById('btn-th').classList.toggle('active', lang === 'th');
+
+    // Translate all elements with data-en / data-th
+    document.querySelectorAll('[data-en]').forEach(el => {
+      const text = el.getAttribute('data-' + lang);
+      if (!text) return;
+      // Use innerHTML to support <strong>, <br> etc.
+      if (text.includes('<') || text.includes('&')) {
+        el.innerHTML = text;
+      } else {
+        el.textContent = text;
+      }
+    });
+
+    // Update page title
+    const titleEl = document.querySelector('title');
+    if (titleEl) {
+      titleEl.textContent = titleEl.getAttribute('data-' + lang) || titleEl.getAttribute('data-en');
+    }
+
+    // Switch font for Thai
+    document.body.style.fontFamily = lang === 'th'
+      ? "'Sarabun', 'Segoe UI', system-ui, sans-serif"
+      : "'Segoe UI', 'Sarabun', system-ui, sans-serif";
+  }
+
+  // Apply on load
+  document.addEventListener('DOMContentLoaded', () => setLang(currentLang));
+</script>
+</body>
+</html>
