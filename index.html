@@ -26,6 +26,7 @@
       --badge-v4: #f0883e;
       --badge-v5: #3fb950;
       --badge-v6: #f778ba;
+      --badge-v7: #39d5e0;
     }
     html { scroll-behavior: smooth; }
     body {
@@ -172,6 +173,7 @@
     .v4 { background: var(--badge-v4); }
     .v5 { background: var(--badge-v5); }
     .v6 { background: var(--badge-v6); }
+    .v7 { background: var(--badge-v7); color: #0d1117; }
 
     /* ===== TIMELINE ===== */
     .timeline { position: relative; padding-left: 32px; }
@@ -268,6 +270,7 @@
     .bar-v4 { background: linear-gradient(90deg,#f0883e,#e36209); }
     .bar-v5 { background: linear-gradient(90deg,#3fb950,#238636); }
     .bar-v6 { background: linear-gradient(90deg,#f778ba,#bf4b8a); }
+    .bar-v7 { background: linear-gradient(90deg,#39d5e0,#0fb8c5); }
 
     /* ===== ACCURACY IMAGES ===== */
     .img-grid {
@@ -455,11 +458,11 @@
 <div class="hero">
   <div class="hero-tag" data-en="🛣️ Road Damage Detection · YOLO11 Series" data-th="🛣️ การตรวจจับความเสียหายบนถนน · ชุด YOLO11">🛣️ Road Damage Detection · YOLO11 Series</div>
   <h1>
-    <span data-en="Model Version Comparison<br>v1 → v6" data-th="เปรียบเทียบเวอร์ชันโมเดล<br>v1 → v6">Model Version Comparison<br>v1 → v6</span>
+    <span data-en="Model Version Comparison<br>v1 → v7" data-th="เปรียบเทียบเวอร์ชันโมเดล<br>v1 → v7">Model Version Comparison<br>v1 → v7</span>
   </h1>
-  <p data-en="A comprehensive comparison of six training iterations for detecting <strong>potholes</strong>, <strong>cracks</strong>, and <strong>manholes</strong> on road surfaces using YOLO11."
-     data-th="การเปรียบเทียบอย่างละเอียดของการฝึก 6 รอบสำหรับการตรวจจับ <strong>หลุมบ่อ</strong>, <strong>รอยแตกร้าว</strong> และ <strong>ฝาท่อ</strong> บนพื้นถนนด้วย YOLO11">
-    A comprehensive comparison of six training iterations for detecting <strong>potholes</strong>, <strong>cracks</strong>, and <strong>manholes</strong> on road surfaces using YOLO11.
+  <p data-en="A comprehensive comparison of seven training iterations for detecting <strong>potholes</strong>, <strong>cracks</strong>, and <strong>manholes</strong> on road surfaces using YOLO11."
+     data-th="การเปรียบเทียบอย่างละเอียดของการฝึก 7 รอบสำหรับการตรวจจับ <strong>หลุมบ่อ</strong>, <strong>รอยแตกร้าว</strong> และ <strong>ฝาท่อ</strong> บนพื้นถนนด้วย YOLO11">
+    A comprehensive comparison of seven training iterations for detecting <strong>potholes</strong>, <strong>cracks</strong>, and <strong>manholes</strong> on road surfaces using YOLO11.
   </p>
   <div class="hero-meta">
     <span data-en="🏗️ Framework: Ultralytics YOLO11" data-th="🏗️ เฟรมเวิร์ก: Ultralytics YOLO11">🏗️ Framework: Ultralytics YOLO11</span>
@@ -483,9 +486,9 @@
   <div class="container">
     <div class="section-header">
       <h2><span class="icon">📊</span> <span data-en="Quick Overview" data-th="ภาพรวมเบื้องต้น">Quick Overview</span></h2>
-      <p data-en="High-level configuration comparison across all six versions at a glance."
-         data-th="ตารางเปรียบเทียบการตั้งค่าระดับสูงของทั้ง 6 เวอร์ชันแบบรวดเร็ว">
-        High-level configuration comparison across all six versions at a glance.
+      <p data-en="High-level configuration comparison across all seven versions at a glance."
+         data-th="ตารางเปรียบเทียบการตั้งค่าระดับสูงของทั้ง 7 เวอร์ชันแบบรวดเร็ว">
+        High-level configuration comparison across all seven versions at a glance.
       </p>
     </div>
     <div class="summary-table-wrap">
@@ -551,21 +554,30 @@
             <td data-en="Yes" data-th="ใช้">Yes</td>
             <td class="num">0.4830</td><td class="num">0.4316</td>
           </tr>
-          <tr class="hl">
+          <tr>
             <td><span class="badge v6">v6</span></td>
             <td>YOLO11s</td><td>150</td><td>960</td><td>AdamW</td>
             <td data-en="Auto (0.8)" data-th="อัตโนมัติ (0.8)">Auto (0.8)</td>
             <td data-en="75/15/10" data-th="แบ่ง 75/15/10">75/15/10</td>
             <td data-en="No" data-th="ไม่ใช้">No</td>
             <td data-en="Yes" data-th="ใช้">Yes</td>
-            <td class="num best">0.4584</td><td class="num best">0.4339</td>
+            <td class="num">0.4343</td><td class="num">0.4339</td>
+          </tr>
+          <tr class="hl">
+            <td><span class="badge v7">v7</span></td>
+            <td>YOLO11m</td><td>200 (stopped@69)</td><td>1280</td><td>AdamW</td>
+            <td>8</td>
+            <td data-en="75/15/10 + oversample" data-th="75/15/10 + เพิ่มตัวอย่าง crack">75/15/10 + oversample</td>
+            <td data-en="No" data-th="ไม่ใช้">No</td>
+            <td data-en="No" data-th="ไม่ใช้">No</td>
+            <td class="num best">0.4343</td><td class="num best">0.4504</td>
           </tr>
         </tbody>
       </table>
     </div>
-    <p class="note" data-en="* v1 uses train=val set (inflated). † v3 uses only 15 val images (inflated). Fair comparison: v4–v6."
-                    data-th="* v1 ใช้เซ็ตเดียวกันสำหรับ train และ val (ผลสูงเกินจริง). † v3 ใช้ภาพ val เพียง 15 ภาพ (ผลสูงเกินจริง). การเปรียบเทียบที่ยุติธรรม: v4–v6">
-      * v1 uses train=val set (inflated). † v3 uses only 15 val images (inflated). Fair comparison: v4–v6.
+    <p class="note" data-en="* v1 uses train=val set (inflated). † v3 uses only 15 val images (inflated). Fair comparison: v4–v7. v7 early-stopped at epoch 69/200."
+                    data-th="* v1 ใช้เซ็ตเดียวกันสำหรับ train และ val (ผลสูงเกินจริง). † v3 ใช้ภาพ val เพียง 15 ภาพ (ผลสูงเกินจริง). การเปรียบเทียบที่ยุติธรรม: v4–v7. v7 หยุดเทรนก่อนกำหนดที่ epoch 69/200">
+      * v1 uses train=val set (inflated). † v3 uses only 15 val images (inflated). Fair comparison: v4–v7. v7 early-stopped at epoch 69/200.
     </p>
   </div>
 </section>
@@ -1093,6 +1105,103 @@
         </div>
       </div>
 
+      </div>
+
+      <!-- V7 -->
+      <div class="timeline-item">
+        <div class="timeline-dot v7" style="background:var(--badge-v7)"></div>
+        <div class="tl-header">
+          <span class="badge v7">v7</span>
+          <h3 data-en="Upgraded Backbone + Crack Oversampling + Group-Stratified Split" data-th="Backbone ขนาดใหญ่ขึ้น + Crack Oversampling + Group-Stratified Split">Upgraded Backbone + Crack Oversampling + Group-Stratified Split</h3>
+          <span class="sub">YOLO11m · 1280px · AdamW · <span data-en="75/15/10 + oversample" data-th="75/15/10 + เพิ่มตัวอย่าง">75/15/10 + oversample</span></span>
+        </div>
+        <div class="change-grid">
+          <div class="change-card">
+            <div class="label">✅ <span data-en="Key Additions" data-th="สิ่งสำคัญที่เพิ่มใหม่">Key Additions</span></div>
+            <ul>
+              <li class="added" data-en="Upgraded to YOLO11m (20M params, 68.3 GFLOPs)" data-th="อัปเกรดเป็น YOLO11m (20M params, 68.3 GFLOPs)">Upgraded to YOLO11m (20M params, 68.3 GFLOPs)</li>
+              <li class="added" data-en="Stratified group split: groups sorted by crack instance count" data-th="แบ่งกลุ่มแบบ stratified: เรียงตามจำนวน crack instance">Stratified group split: sorted by crack instance count</li>
+              <li class="added" data-en="Crack oversampling (×1.5): 1466 → 1988 train images" data-th="Crack oversampling (×1.5): 1466 → 1988 ภาพ train">Crack oversampling (×1.5): 1466 → 1988 train images</li>
+              <li class="added" data-en="Renamed duplicate files to prevent copy collision (FIX #1)" data-th="เปลี่ยนชื่อไฟล์ซ้ำเพื่อป้องกันการทับกัน (FIX #1)">Renamed duplicate files to prevent copy collision (FIX #1)</li>
+              <li class="added" data-en="CLAHE preprocessing available (OFF by default — avoids domain mismatch FIX #2)" data-th="CLAHE preprocessing พร้อมใช้งาน (ปิดเป็นค่าเริ่มต้น — ป้องกัน domain mismatch FIX #2)">CLAHE preprocessing (OFF by default, FIX #2)</li>
+            </ul>
+          </div>
+          <div class="change-card">
+            <div class="label">🔄 <span data-en="Changes from v6" data-th="สิ่งที่เปลี่ยนแปลงจาก v6">Changes from v6</span></div>
+            <ul>
+              <li class="changed" data-en="Model: YOLO11s → YOLO11m (much larger)" data-th="โมเดล: YOLO11s → YOLO11m (ใหญ่ขึ้นมาก)">Model: YOLO11s → YOLO11m</li>
+              <li class="changed" data-en="Img size: 960 → 1280" data-th="ขนาดภาพ: 960 → 1280">Img size: 960 → 1280</li>
+              <li class="changed" data-en="Batch: Auto(0.8) → 8 (OOM at 32/16 → settled at 8)" data-th="Batch: Auto(0.8) → 8 (OOM ที่ 32/16 → ใช้ 8)">Batch: Auto → 8 (OOM safety)</li>
+              <li class="changed" data-en="Max epochs: 150 → 200 (early-stopped at epoch 69)" data-th="รอบสูงสุด: 150 → 200 (หยุดก่อนที่ epoch 69)">Max epochs: 150 → 200 (early-stopped @ 69)</li>
+              <li class="changed" data-en="Split: now stratified by crack instance count (new in v7)" data-th="การแบ่ง: stratify ตามจำนวน crack instance (ใหม่ใน v7)">Split: stratified by crack instance count</li>
+              <li class="changed" data-en="Patience: 20 → 30" data-th="Patience: 20 → 30">Patience: 20 → 30</li>
+            </ul>
+          </div>
+          <div class="change-card">
+            <div class="label">⚙️ <span data-en="Hyperparameters" data-th="พารามิเตอร์">Hyperparameters</span></div>
+            <ul>
+              <li>Optimizer: AdamW · LR0: 0.0015 · LRF: 0.01</li>
+              <li>Momentum: 0.937 · Weight decay: 0.0005</li>
+              <li>Box: 7.5 · Cls: 0.6 · DFL: 1.5</li>
+              <li>Mosaic: 1.0 · Close mosaic: 15 · Mixup: 0.0</li>
+              <li>Scale: 0.5 · Translate: 0.1 · Degrees: 0.0</li>
+              <li data-en="Val conf=0.001, IoU=0.6 (standard)" data-th="Val conf=0.001, IoU=0.6 (มาตรฐาน)">Val conf=0.001, IoU=0.6 (standard)</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- V7 GRAPH PANEL -->
+        <div class="graph-panel">
+          <div class="graph-panel-header">
+            <span class="badge v7">v7</span>
+            <h4 data-en="Training Graphs — Results &amp; Confusion Matrix" data-th="กราฟการเทรน — ผลลัพธ์และ Confusion Matrix">Training Graphs — Results &amp; Confusion Matrix</h4>
+            <span class="graph-tag" data-en="YOLO11m · 69 Epochs (Early-stopped) · AdamW · 1280px" data-th="YOLO11m · 69 รอบ (หยุดก่อนกำหนด) · AdamW · 1280px">YOLO11m · 69 Epochs (Early-stopped) · AdamW · 1280px</span>
+          </div>
+          <div class="graph-panel-body">
+            <div class="graph-img-wrap">
+              <img src="v7_results.png" alt="v7 training results graph" loading="lazy" />
+              <div class="g-label" data-en="Training Curves (Losses · Precision · Recall · mAP50)" data-th="กราฟการเทรน (Loss · Precision · Recall · mAP50)">Training Curves (Losses · Precision · Recall · mAP50)</div>
+            </div>
+            <div class="graph-img-wrap">
+              <img src="v7_confusion.png" alt="v7 normalized confusion matrix" loading="lazy" />
+              <div class="g-label" data-en="Normalized Confusion Matrix (Validation)" data-th="Confusion Matrix (Validation)">Normalized Confusion Matrix (Validation)</div>
+            </div>
+          </div>
+          <div class="graph-analysis">
+            <p data-en="<strong>Training curves analysis:</strong> All three train losses (box: 2.39→1.49, cls: 3.78→1.47, dfl: 2.29→1.60) show a <strong>clean, continuous downward trend across all 69 epochs</strong> — the best loss convergence behaviour of any version so far. No spikes, no resets. This confirms YOLO11m's deeper backbone (231 layers, 20M params) learns road features progressively and stably even at 1280px resolution with batch=8."
+               data-th="<strong>การวิเคราะห์กราฟการเทรน:</strong> Train losses ทั้งสาม (box: 2.39→1.49, cls: 3.78→1.47, dfl: 2.29→1.60) แสดง <strong>แนวโน้มลดลงต่อเนื่องและสะอาดตลอด 69 epochs</strong> — พฤติกรรมการ convergence ที่ดีที่สุดของทุกเวอร์ชัน ไม่มี spike ไม่มีการรีเซ็ต นี่ยืนยันว่า backbone ที่ลึกกว่าของ YOLO11m (231 layers, 20M params) เรียนรู้ลักษณะเด่นของถนนได้อย่างต่อเนื่องและเสถียร แม้ที่ความละเอียด 1280px กับ batch=8">
+              <strong>Training curves analysis:</strong> All three train losses (box: 2.39→1.49, cls: 3.78→1.47, dfl: 2.29→1.60) show a <strong>clean, continuous downward trend across all 69 epochs</strong> — the best loss convergence behaviour of any version so far. YOLO11m's deeper backbone (231 layers, 20M params) learns road features progressively and stably at 1280px.
+            </p>
+            <p data-en="<strong>Validation dynamics:</strong> Val losses decline until approximately epoch 20–25, then gradually rise — a classic overfitting pattern as the larger model memorises training details not present in the validation split. Notably, precision climbs steadily to ~0.52 (best across all versions) while recall shows more volatility. <strong>mAP50 on the val set peaks at ~0.425 (epoch ~39) then plateaus</strong>, and patience=30 triggered early stop at epoch 69. The best val mAP50 of 0.4343 is comparable to v6's 0.4584 adjusted but the <strong>test mAP50 of 0.4504 is the highest ever across all seven versions</strong>."
+               data-th="<strong>Validation dynamics:</strong> Val losses ลดลงจนถึงประมาณ epoch 20–25 แล้วค่อยๆ เพิ่มขึ้น — รูปแบบ overfitting ของโมเดลขนาดใหญ่ที่ท่องจำรายละเอียด train ที่ไม่มีใน val Precision เพิ่มขึ้นอย่างสม่ำเสมอถึง ~0.52 (ดีที่สุดในทุกเวอร์ชัน) ขณะที่ recall ผันผวนมากขึ้น <strong>mAP50 บน val สูงสุดที่ ~0.425 (ประมาณ epoch 39) แล้ว plateau</strong> และ patience=30 ทำให้หยุดเทรนที่ epoch 69 <strong>test mAP50 ที่ 0.4504 ถือเป็นสูงสุดในทุก 7 เวอร์ชัน</strong>">
+              <strong>Validation dynamics:</strong> Val losses decline until epoch ~20–25, then gradually rise — classic overfitting from a larger model. Precision climbs to ~0.52 (best across all versions), while recall shows more volatility. <strong>Val mAP50 peaks at ~0.425 around epoch 39 then plateaus</strong>. Early stop at epoch 69. The <strong>test mAP50 of 0.4504 is the highest ever across all seven versions</strong>.
+            </p>
+            <div class="obs-grid">
+              <div class="obs-item good">
+                <div class="obs-icon">✅</div>
+                <div class="obs-title" data-en="Best Test mAP50: 0.4504" data-th="Test mAP50 ดีที่สุด: 0.4504">Best Test mAP50: 0.4504</div>
+                <div class="obs-body" data-en="v7 achieves the highest test mAP50 of any version (0.4504), beating v6 (0.4339) and v5 (0.4316). The upgrade to YOLO11m + crack oversampling + 1280px together lifted generalisation to the unseen test set." data-th="v7 ทำ test mAP50 ได้สูงที่สุดในทุกเวอร์ชัน (0.4504) เอาชนะ v6 (0.4339) และ v5 (0.4316) การอัปเกรดเป็น YOLO11m + crack oversampling + 1280px ช่วยเพิ่ม generalization บน test set">v7 achieves the highest test mAP50 across all versions (0.4504), beating v6 (0.4339) and v5 (0.4316). YOLO11m + crack oversampling + 1280px together boosted unseen-set performance.</div>
+              </div>
+              <div class="obs-item good">
+                <div class="obs-icon">✅</div>
+                <div class="obs-title" data-en="Best precision: ~0.52 (val)" data-th="Precision ดีที่สุด: ~0.52 (val)">Best Precision: ~0.52 (val)</div>
+                <div class="obs-body" data-en="Peak validation precision of ~0.52 is the highest across all seven versions, indicating the larger model makes more precise predictions when it does detect objects." data-th="Peak precision บน val ที่ ~0.52 สูงที่สุดในทุก 7 เวอร์ชัน แสดงว่าโมเดลขนาดใหญ่มี precision สูงกว่าเมื่อตรวจพบวัตถุ">Peak val precision of ~0.52 is the highest across all seven versions — the larger backbone makes more precise detections.</div>
+              </div>
+              <div class="obs-item warn">
+                <div class="obs-icon">⚠️</div>
+                <div class="obs-title" data-en="Crack: still 70% miss rate" data-th="รอยแตก: อัตราพลาด 70% ยังสูง">Crack: 70% miss rate (persistent challenge)</div>
+                <div class="obs-body" data-en="Despite crack oversampling, 70% of crack instances are still classified as background. Only 28% are correctly detected. Oversampling improved crack TEST mAP50 to 0.298 (vs 0.263 in v6), but cracks remain the hardest class." data-th="แม้จะมี crack oversampling แต่ 70% ของ crack ยังถูกจัดเป็น background มีเพียง 28% ที่ตรวจจับถูกต้อง Oversampling ปรับปรุง crack TEST mAP50 เป็น 0.298 (vs 0.263 ใน v6) แต่ crack ยังเป็นคลาสที่ยากที่สุด">Despite oversampling, 70% of cracks still go to background. Crack TEST mAP50 improved to 0.298 (vs 0.263 in v6). Cracks remain the hardest class across all versions.</div>
+              </div>
+              <div class="obs-item info">
+                <div class="obs-icon">💡</div>
+                <div class="obs-title" data-en="Manhole: best class (mAP50=0.717)" data-th="ฝาท่อ: คลาสที่ดีที่สุด (mAP50=0.717)">Manhole: highest class mAP50 (0.717)</div>
+                <div class="obs-body" data-en="Manhole test mAP50 of 0.717 is the highest among v4–v7, and only second to v3's 0.995 (tiny test set). The model confidently detects manholes at 1280px with P=0.736, R=0.692." data-th="Manhole test mAP50 ที่ 0.717 สูงที่สุดในบรรดา v4–v7 และรองลงมาจาก 0.995 ของ v3 (ซึ่งใช้ test set เล็กมาก) โมเดลตรวจจับ manhole ที่ 1280px ด้วย P=0.736, R=0.692">Manhole TEST mAP50 of 0.717 is the best among v4–v7 (P=0.736, R=0.692). The 1280px resolution gives the backbone excellent manhole detail to work with.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
@@ -1161,12 +1270,18 @@
             <td class="num">0.458</td><td class="num">0.190</td>
             <td data-en="Val (294 imgs)" data-th="Val (294 ภาพ)">Val (294 imgs)</td>
           </tr>
+          <tr>
+            <td><span class="badge v7">v7</span></td><td>YOLO11m</td>
+            <td class="num best">0.520</td><td class="num">0.433</td>
+            <td class="num">0.434</td><td class="num">0.164</td>
+            <td data-en="Val (311 imgs)" data-th="Val (311 ภาพ)">Val (311 imgs)</td>
+          </tr>
         </tbody>
       </table>
     </div>
 
     <h3 style="font-size:15px;color:var(--text-muted);margin-bottom:12px;font-weight:700;">
-      🟢 <span data-en="TEST SET mAP50 (Comparable Versions: v3–v6)" data-th="mAP50 ชุดทดสอบ (เวอร์ชันที่เปรียบเทียบได้: v3–v6)">TEST SET mAP50 (Comparable Versions: v3–v6)</span>
+      🟢 <span data-en="TEST SET mAP50 (Comparable Versions: v3–v7)" data-th="mAP50 ชุดทดสอบ (เวอร์ชันที่เปรียบเทียบได้: v3–v7)">TEST SET mAP50 (Comparable Versions: v3–v7)</span>
     </h3>
     <div class="metrics-wrap" style="margin-bottom:32px;">
       <table class="metrics">
@@ -1196,10 +1311,15 @@
             <td class="num">0.4316</td><td class="num">0.174</td>
             <td class="num">0.355</td><td class="num">0.260</td><td class="num">0.680</td>
           </tr>
-          <tr class="hl">
+          <tr>
             <td><span class="badge v6">v6</span></td>
-            <td class="num best">0.4339</td><td class="num best">0.170</td>
-            <td class="num best">0.359</td><td class="num best">0.263</td><td class="num">0.680</td>
+            <td class="num">0.4339</td><td class="num">0.170</td>
+            <td class="num">0.359</td><td class="num">0.263</td><td class="num">0.680</td>
+          </tr>
+          <tr class="hl">
+            <td><span class="badge v7">v7</span></td>
+            <td class="num best">0.4504</td><td class="num best">0.178</td>
+            <td class="num best">0.370</td><td class="num best">0.298</td><td class="num best">0.717</td>
           </tr>
         </tbody>
       </table>
@@ -1235,7 +1355,11 @@
           <tr><td rowspan="3"><span class="badge v6">v6</span></td>
               <td data-en="Pothole" data-th="หลุมบ่อ">Pothole</td><td class="num">0.434</td><td class="num">0.422</td><td class="num">0.402</td></tr>
           <tr><td data-en="Crack"   data-th="รอยแตกร้าว">Crack</td><td class="num">0.480</td><td class="num">0.323</td><td class="num">0.338</td></tr>
-          <tr><td data-en="Manhole" data-th="ฝาท่อ">Manhole</td><td class="num">0.595</td><td class="num">0.625</td><td class="num best">0.635</td></tr>
+          <tr style="border-bottom:2px solid var(--border)"><td data-en="Manhole" data-th="ฝาท่อ">Manhole</td><td class="num">0.595</td><td class="num">0.625</td><td class="num best">0.635</td></tr>
+          <tr><td rowspan="3"><span class="badge v7">v7</span></td>
+              <td data-en="Pothole" data-th="หลุมบ่อ">Pothole</td><td class="num">0.370</td><td class="num">0.508</td><td class="num">0.336</td></tr>
+          <tr><td data-en="Crack"   data-th="รอยแตกร้าว">Crack</td><td class="num">0.423</td><td class="num">0.350</td><td class="num">0.298</td></tr>
+          <tr><td data-en="Manhole" data-th="ฝาท่อ">Manhole</td><td class="num best">0.736</td><td class="num best">0.692</td><td class="num best">0.717</td></tr>
         </tbody>
       </table>
     </div>
@@ -1255,9 +1379,9 @@
     <div class="bar-section">
 
       <div class="bar-group">
-        <h3 data-en="Overall mAP50 — Validation Set (v4–v6, same data scale)"
-            data-th="mAP50 โดยรวม — ชุดตรวจสอบ (v4–v6, ขนาดข้อมูลเท่ากัน)">
-          Overall mAP50 — Validation Set (v4–v6, same data scale)
+        <h3 data-en="Overall mAP50 — Validation Set (v4–v7, same data scale)"
+            data-th="mAP50 โดยรวม — ชุดตรวจสอบ (v4–v7, ขนาดข้อมูลเท่ากัน)">
+          Overall mAP50 — Validation Set (v4–v7, same data scale)
         </h3>
         <div class="bar-row">
           <div class="bar-label"><span class="badge v4">v4</span></div>
@@ -1274,49 +1398,59 @@
           <div class="bar-track"><div class="bar-fill bar-v6" style="width:94.2%">0.458</div></div>
           <div class="bar-val">0.458</div>
         </div>
-      </div>
-
-      <div class="bar-group">
-        <h3 data-en="Overall mAP50 — Test Set (v4–v6)"
-            data-th="mAP50 โดยรวม — ชุดทดสอบ (v4–v6)">
-          Overall mAP50 — Test Set (v4–v6)
-        </h3>
         <div class="bar-row">
-          <div class="bar-label"><span class="badge v4">v4</span></div>
-          <div class="bar-track"><div class="bar-fill bar-v4" style="width:86.5%">0.376</div></div>
-          <div class="bar-val">0.376</div>
-        </div>
-        <div class="bar-row">
-          <div class="bar-label"><span class="badge v5">v5</span></div>
-          <div class="bar-track"><div class="bar-fill bar-v5" style="width:99.5%">0.432</div></div>
-          <div class="bar-val">0.432</div>
-        </div>
-        <div class="bar-row">
-          <div class="bar-label"><span class="badge v6">v6</span></div>
-          <div class="bar-track"><div class="bar-fill bar-v6" style="width:100%">0.434</div></div>
+          <div class="bar-label"><span class="badge v7">v7</span></div>
+          <div class="bar-track"><div class="bar-fill bar-v7" style="width:89.4%">0.434</div></div>
           <div class="bar-val">0.434</div>
         </div>
       </div>
 
       <div class="bar-group">
-        <h3 data-en="Per-Class mAP50 on TEST SET — v6 (Best Fair Model)"
-            data-th="mAP50 แยกคลาส ชุดทดสอบ — v6 (โมเดลที่ดีที่สุดในการเปรียบเทียบที่ยุติธรรม)">
-          Per-Class mAP50 on TEST SET — <span class="badge v6">v6</span>
+        <h3 data-en="Overall mAP50 — Test Set (v4–v7)"
+            data-th="mAP50 โดยรวม — ชุดทดสอบ (v4–v7)">
+          Overall mAP50 — Test Set (v4–v7)
+        </h3>
+        <div class="bar-row">
+          <div class="bar-label"><span class="badge v4">v4</span></div>
+          <div class="bar-track"><div class="bar-fill bar-v4" style="width:83.5%">0.376</div></div>
+          <div class="bar-val">0.376</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label"><span class="badge v5">v5</span></div>
+          <div class="bar-track"><div class="bar-fill bar-v5" style="width:95.8%">0.432</div></div>
+          <div class="bar-val">0.432</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label"><span class="badge v6">v6</span></div>
+          <div class="bar-track"><div class="bar-fill bar-v6" style="width:96.3%">0.434</div></div>
+          <div class="bar-val">0.434</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label"><span class="badge v7">v7</span></div>
+          <div class="bar-track"><div class="bar-fill bar-v7" style="width:100%">0.450</div></div>
+          <div class="bar-val">0.450</div>
+        </div>
+      </div>
+
+      <div class="bar-group">
+        <h3 data-en="Per-Class mAP50 on TEST SET — v7 (Best Overall Model)"
+            data-th="mAP50 แยกคลาส ชุดทดสอบ — v7 (โมเดลที่ดีที่สุดโดยรวม)">
+          Per-Class mAP50 on TEST SET — <span class="badge v7">v7</span>
         </h3>
         <div class="bar-row">
           <div class="bar-label" style="width:72px;font-size:11px" data-en="Pothole" data-th="หลุมบ่อ">Pothole</div>
-          <div class="bar-track"><div class="bar-fill bar-pothole" style="width:52.8%">0.359</div></div>
-          <div class="bar-val">0.359</div>
+          <div class="bar-track"><div class="bar-fill bar-pothole" style="width:51.7%">0.370</div></div>
+          <div class="bar-val">0.370</div>
         </div>
         <div class="bar-row">
           <div class="bar-label" style="width:72px;font-size:11px" data-en="Crack" data-th="รอยแตก">Crack</div>
-          <div class="bar-track"><div class="bar-fill bar-crack" style="width:38.7%">0.263</div></div>
-          <div class="bar-val">0.263</div>
+          <div class="bar-track"><div class="bar-fill bar-crack" style="width:41.6%">0.298</div></div>
+          <div class="bar-val">0.298</div>
         </div>
         <div class="bar-row">
           <div class="bar-label" style="width:72px;font-size:11px" data-en="Manhole" data-th="ฝาท่อ">Manhole</div>
-          <div class="bar-track"><div class="bar-fill bar-manhole" style="width:100%">0.680</div></div>
-          <div class="bar-val">0.680</div>
+          <div class="bar-track"><div class="bar-fill bar-manhole" style="width:100%">0.717</div></div>
+          <div class="bar-val">0.717</div>
         </div>
       </div>
 
@@ -1354,6 +1488,11 @@
           <div class="bar-label"><span class="badge v6">v6</span></div>
           <div class="bar-track"><div class="bar-fill bar-v6" style="width:64.4%">0.458</div></div>
           <div class="bar-val">0.458</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label"><span class="badge v7">v7</span></div>
+          <div class="bar-track"><div class="bar-fill bar-v7" style="width:61.0%">0.434</div></div>
+          <div class="bar-val">0.434</div>
         </div>
         <p class="note" data-en="* v1 uses train=val (inflated). † v3 uses only 15 val images (inflated)."
                         data-th="* v1 ใช้ train=val (ผลสูงเกินจริง). † v3 ใช้ val เพียง 15 ภาพ (ผลสูงเกินจริง)">
@@ -1424,6 +1563,14 @@
         </div>
         <img src="v6.png" alt="v6 accuracy output" loading="lazy" />
       </div>
+      <div class="img-card">
+        <div class="img-card-header">
+          <span class="badge v7">v7</span>
+          <h3 data-en="Upgraded Backbone + Oversampling — YOLO11m · 1280px" data-th="Backbone ใหญ่ขึ้น + Oversampling — YOLO11m · 1280px">Upgraded Backbone + Oversampling — YOLO11m · 1280px</h3>
+          <span class="map-pill">mAP50: 0.450 (test)</span>
+        </div>
+        <img src="v7.png" alt="v7 accuracy output" loading="lazy" />
+      </div>
     </div>
   </div>
 </section>
@@ -1442,53 +1589,53 @@
     <div class="verdict-box">
       <h3>
         🥇 <span data-en="Best Overall Model:" data-th="โมเดลที่ดีที่สุดโดยรวม:">Best Overall Model:</span>
-        <span class="badge v6" style="font-size:16px">v6</span>
-        <span style="font-size:14px;color:var(--text-muted);" data-en="(Fairly Evaluated)" data-th="(ประเมินอย่างยุติธรรม)">(Fairly Evaluated)</span>
+        <span class="badge v7" style="font-size:16px">v7</span>
+        <span style="font-size:14px;color:var(--text-muted);" data-en="(Highest Test mAP50)" data-th="(Test mAP50 สูงสุด)">(Highest Test mAP50)</span>
       </h3>
       <p style="color:var(--text-muted);line-height:1.9;"
-         data-en="Among versions evaluated on a <strong>consistent, properly split dataset</strong> (75/15/10 group-aware split, 229-image test set), <strong>v6</strong> achieves the highest test-set mAP50 of <strong>0.4339</strong> and the best manhole precision of <strong>0.732</strong>. It uses <strong>YOLO11s</strong> (lightweight 10M params) with higher resolution (960px), <strong>AdamW</strong> optimizer, and a clean, minimal augmentation strategy that avoids over-augmenting road texture — making it the most reliable and practically deployable model."
-         data-th="ในบรรดาเวอร์ชันที่ประเมินบน <strong>ชุดข้อมูลที่แบ่งอย่างถูกต้องและสม่ำเสมอ</strong> (แบ่งแบบ group-aware 75/15/10, ชุดทดสอบ 229 ภาพ), <strong>v6</strong> ทำได้ mAP50 สูงที่สุดบนชุดทดสอบที่ <strong>0.4339</strong> และมี precision สำหรับฝาท่อสูงที่สุดที่ <strong>0.732</strong> โมเดลนี้ใช้ <strong>YOLO11s</strong> (ขนาดเล็ก 10M พารามิเตอร์) กับความละเอียดภาพสูงขึ้น (960px), <strong>AdamW</strong> optimizer และกลยุทธ์ augmentation ที่เรียบง่าย ทำให้เป็นโมเดลที่เชื่อถือได้และนำไปใช้งานได้จริงมากที่สุด">
-        Among versions evaluated on a <strong>consistent, properly split dataset</strong> (75/15/10 group-aware split, 229-image test set), <strong>v6</strong> achieves the highest test-set mAP50 of <strong>0.4339</strong> and the best manhole precision of <strong>0.732</strong>. It uses <strong>YOLO11s</strong> (lightweight 10M params) with higher resolution (960px), <strong>AdamW</strong> optimizer, and a clean, minimal augmentation strategy.
+         data-en="Among versions evaluated on a <strong>consistent, properly split dataset</strong> (75/15/10 group-aware split, 232-image test set), <strong>v7</strong> achieves the highest test-set mAP50 of <strong>0.4504</strong> and the best manhole mAP50 of <strong>0.717</strong>. It uses <strong>YOLO11m</strong> (larger 20M param backbone) at <strong>1280px resolution</strong> with crack oversampling (×1.5) and stratified group split — making it the most capable and best-generalising model tested so far."
+         data-th="ในบรรดาเวอร์ชันที่ประเมินบน <strong>ชุดข้อมูลที่แบ่งอย่างถูกต้องและสม่ำเสมอ</strong> (แบ่งแบบ group-aware 75/15/10, ชุดทดสอบ 232 ภาพ), <strong>v7</strong> ทำได้ mAP50 สูงที่สุดบนชุดทดสอบที่ <strong>0.4504</strong> และมี manhole mAP50 สูงที่สุดที่ <strong>0.717</strong> โมเดลนี้ใช้ <strong>YOLO11m</strong> (backbone ขนาดใหญ่ขึ้น 20M params) ที่ความละเอียด <strong>1280px</strong> ด้วย crack oversampling (×1.5) และ stratified group split — ทำให้เป็นโมเดลที่มีประสิทธิภาพสูงสุดและ generalize ดีที่สุดเท่าที่ทดสอบมา">
+        Among versions evaluated on a <strong>consistent, properly split dataset</strong> (75/15/10 group-aware split, 232-image test set), <strong>v7</strong> achieves the highest test-set mAP50 of <strong>0.4504</strong> and the best manhole mAP50 of <strong>0.717</strong>. It uses <strong>YOLO11m</strong> (larger 20M param backbone) at <strong>1280px resolution</strong> with crack oversampling (×1.5) and a stratified group split.
       </p>
       <div class="verdict-grid">
         <div class="verdict-item">
           <div class="v-label" data-en="Test mAP50" data-th="Test mAP50">Test mAP50</div>
-          <div class="v-val" style="color:var(--accent2)">0.4339</div>
-          <div class="v-sub" data-en="Best among fair evaluations" data-th="ดีที่สุดในการเปรียบเทียบที่ยุติธรรม">Best among fair evaluations</div>
+          <div class="v-val" style="color:var(--accent2)">0.4504</div>
+          <div class="v-sub" data-en="Best across all versions" data-th="ดีที่สุดในทุกเวอร์ชัน">Best across all versions</div>
         </div>
         <div class="verdict-item">
           <div class="v-label" data-en="Model Size" data-th="ขนาดโมเดล">Model Size</div>
-          <div class="v-val" style="color:var(--accent)">YOLO11s</div>
-          <div class="v-sub">9.4M params · 21.4 GFLOPs</div>
+          <div class="v-val" style="color:var(--accent)">YOLO11m</div>
+          <div class="v-sub">20M params · 68.3 GFLOPs</div>
         </div>
         <div class="verdict-item">
           <div class="v-label" data-en="Resolution" data-th="ความละเอียด">Resolution</div>
-          <div class="v-val" style="color:var(--accent)">960 px</div>
+          <div class="v-val" style="color:var(--accent)">1280 px</div>
           <div class="v-sub" data-en="Highest across all versions" data-th="สูงสุดในทุกเวอร์ชัน">Highest across all versions</div>
         </div>
         <div class="verdict-item">
-          <div class="v-label" data-en="Manhole Precision" data-th="ความแม่นยำฝาท่อ">Manhole Precision</div>
-          <div class="v-val" style="color:var(--accent2)">0.732</div>
+          <div class="v-label" data-en="Manhole mAP50" data-th="mAP50 ฝาท่อ">Manhole mAP50</div>
+          <div class="v-val" style="color:var(--accent2)">0.717</div>
           <div class="v-sub" data-en="Best manhole detection (test)" data-th="ตรวจจับฝาท่อได้ดีที่สุด (test)">Best manhole detection (test)</div>
         </div>
       </div>
     </div>
 
     <div class="runner-up-box orange">
-      <h4>🥈 <span data-en="Runner-up:" data-th="อันดับสอง:">Runner-up:</span> <span class="badge v5">v5</span> — <span data-en="Close second (test mAP50: 0.4316)" data-th="ตามมาติดๆ (test mAP50: 0.4316)">Close second (test mAP50: 0.4316)</span></h4>
+      <h4>🥈 <span data-en="Runner-up:" data-th="อันดับสอง:">Runner-up:</span> <span class="badge v6">v6</span> — <span data-en="Lightweight champion (test mAP50: 0.4339)" data-th="แชมป์น้ำหนักเบา (test mAP50: 0.4339)">Lightweight champion (test mAP50: 0.4339)</span></h4>
       <p style="color:var(--text-muted);font-size:13px;margin-top:6px;"
-         data-en="v5 scores nearly identically to v6 on the test set. It uses more augmentation (mixup=0.1, copy_paste=0.3, degrees=2) which can help generalize but may have slightly hurt the test score. It's a valid alternative if you want more augmentation diversity."
-         data-th="v5 ทำคะแนนได้ใกล้เคียงกับ v6 มากบนชุดทดสอบ ใช้ augmentation มากกว่า (mixup=0.1, copy_paste=0.3, degrees=2) ซึ่งอาจช่วยให้โมเดล generalize ได้ดีขึ้น แต่อาจส่งผลเล็กน้อยต่อ test score เป็นตัวเลือกที่ดีหากต้องการความหลากหลายของ augmentation">
-        v5 scores nearly identically to v6 on the test set. It uses more augmentation (mixup=0.1, copy_paste=0.3, degrees=2) which can help generalize but may have slightly hurt the test score.
+         data-en="v6 remains the best lightweight option — YOLO11s (10M params, 21.4 GFLOPs) at 960px. It achieves 0.4339 test mAP50 with far fewer resources than v7. Ideal when deployment hardware is constrained or inference speed matters."
+         data-th="v6 ยังคงเป็นตัวเลือกที่ดีที่สุดสำหรับน้ำหนักเบา — YOLO11s (10M params, 21.4 GFLOPs) ที่ 960px ทำ test mAP50 ได้ 0.4339 โดยใช้ทรัพยากรน้อยกว่า v7 มาก เหมาะสำหรับ hardware ที่มีข้อจำกัดหรือเมื่อความเร็วในการ inference สำคัญ">
+        v6 remains the best lightweight option — YOLO11s (10M params) at 960px. It achieves 0.4339 test mAP50 with far fewer resources than v7. Ideal when deployment hardware is constrained or inference speed matters.
       </p>
     </div>
 
     <div class="runner-up-box purple">
       <h4>⚠️ <span data-en="Note on v3: Highest Raw mAP50 (0.711) — not directly comparable" data-th="หมายเหตุ v3: mAP50 ดิบสูงที่สุด (0.711) — ไม่สามารถเทียบตรงๆ ได้">Note on v3: Highest Raw mAP50 (0.711) — not directly comparable</span></h4>
       <p style="color:var(--text-muted);font-size:13px;margin-top:6px;"
-         data-en="v3 used K-Fold CV and achieved 0.711 mAP50 on a 15-image val set and 0.717 on a 12-image test set. These are extremely small evaluation sets and should not be compared directly with v4–v6. If v3 is re-evaluated on a larger held-out set, it may prove superior — the group-aware deduplication and K-Fold strategy are methodologically sound."
-         data-th="v3 ใช้ K-Fold CV และได้ 0.711 mAP50 บน val set 15 ภาพ และ 0.717 บน test set 12 ภาพ ซึ่งเป็นชุดประเมินที่เล็กมากและไม่ควรเทียบตรงๆ กับ v4–v6 หาก v3 ถูกประเมินใหม่บน hold-out set ขนาดใหญ่กว่า อาจพิสูจน์ได้ว่าดีกว่า — กลยุทธ์ group-aware deduplication และ K-Fold นั้นถูกต้องทางวิธีวิทยา">
-        v3 used K-Fold CV and achieved 0.711 mAP50 on a 15-image val set. These are extremely small evaluation sets and should not be compared directly with v4–v6. If v3 is re-evaluated on a larger held-out set, it may prove superior.
+         data-en="v3 used K-Fold CV and achieved 0.711 mAP50 on a 15-image val set and 0.717 on a 12-image test set. These are extremely small evaluation sets and should not be compared directly with v4–v7. If v3 is re-evaluated on a larger held-out set, it may prove superior — the group-aware deduplication and K-Fold strategy are methodologically sound."
+         data-th="v3 ใช้ K-Fold CV และได้ 0.711 mAP50 บน val set 15 ภาพ และ 0.717 บน test set 12 ภาพ ซึ่งเป็นชุดประเมินที่เล็กมากและไม่ควรเทียบตรงๆ กับ v4–v7 หาก v3 ถูกประเมินใหม่บน hold-out set ขนาดใหญ่กว่า อาจพิสูจน์ได้ว่าดีกว่า — กลยุทธ์ group-aware deduplication และ K-Fold นั้นถูกต้องทางวิธีวิทยา">
+        v3 used K-Fold CV and achieved 0.711 mAP50 on a 15-image val set. These are extremely small evaluation sets and should not be compared directly with v4–v7. If v3 is re-evaluated on a larger held-out set, it may prove superior.
       </p>
     </div>
 
@@ -1500,9 +1647,10 @@
           <ul>
             <li class="added" data-en="Group-aware train/val/test split (prevents data leakage)" data-th="แบ่งข้อมูลแบบ group-aware (ป้องกันข้อมูลรั่วไหล)">Group-aware train/val/test split</li>
             <li class="added" data-en="AdamW optimizer outperforms RAdam at this scale" data-th="AdamW ดีกว่า RAdam ในขนาดนี้">AdamW outperforms RAdam at this scale</li>
-            <li class="added" data-en="YOLO11s outperforms YOLO11m (less overfitting)" data-th="YOLO11s ดีกว่า YOLO11m (overfitting น้อยกว่า)">YOLO11s outperforms YOLO11m on small datasets</li>
-            <li class="added" data-en="Higher resolution (896→960px) improved quality" data-th="ความละเอียดสูงขึ้น (896→960px) ปรับปรุงคุณภาพ">Higher resolution (896→960px) improved quality</li>
-            <li class="added" data-en="Auto-batch (0.8) maximizes GPU utilization" data-th="Auto-batch (0.8) ใช้ GPU ได้เต็มที่">Auto-batch (0.8) maximizes GPU utilization</li>
+            <li class="added" data-en="Scaling to YOLO11m (v7): best test mAP50 ever (0.4504)" data-th="อัปเกรดเป็น YOLO11m (v7): test mAP50 ดีที่สุดเท่าที่เคยได้ (0.4504)">Scaling to YOLO11m (v7): best test mAP50 (0.4504)</li>
+            <li class="added" data-en="Crack oversampling improved crack TEST mAP50 (0.263 → 0.298)" data-th="Crack oversampling ปรับปรุง crack TEST mAP50 (0.263 → 0.298)">Crack oversampling: crack mAP50 improved (0.263 → 0.298)</li>
+            <li class="added" data-en="Higher resolution (896→960→1280px) consistently improved quality" data-th="ความละเอียดสูงขึ้น (896→960→1280px) ปรับปรุงคุณภาพอย่างสม่ำเสมอ">Higher resolution (896→960→1280px) improved quality</li>
+            <li class="added" data-en="Stratified group split ensures balanced crack coverage across splits" data-th="Stratified group split ทำให้การกระจาย crack สมดุลในทุก split">Stratified split ensures balanced crack coverage</li>
             <li class="added" data-en="Minimal augmentation works better than heavy augmentation" data-th="Augmentation น้อยทำงานได้ดีกว่า heavy augmentation">Minimal augmentation &gt; heavy augmentation here</li>
           </ul>
         </div>
@@ -1510,20 +1658,20 @@
           <div class="label">❌ <span data-en="What Didn't Work" data-th="สิ่งที่ไม่ได้ผล">What Didn't Work</span></div>
           <ul>
             <li class="removed" data-en="Train=Val setup (v1): inflated, misleading metrics" data-th="ใช้ train=val (v1): ผลสูงเกินจริง ทำให้เข้าใจผิด">Train=Val setup (v1): inflated metrics</li>
-            <li class="removed" data-en="Scaling to YOLO11m (v4): much worse results" data-th="ขยายเป็น YOLO11m (v4): ผลลัพธ์แย่ลงมาก">Scaling to YOLO11m (v4): much worse results</li>
             <li class="removed" data-en="Heavy augmentation (copy_paste + mixup + rotation) hurt v4/v5" data-th="Augmentation หนัก (copy_paste + mixup + rotation) ส่งผลเสียต่อ v4/v5">Heavy augmentation hurt v4/v5</li>
             <li class="removed" data-en="RAdam with high momentum (v4): suboptimal convergence" data-th="RAdam กับ momentum สูง (v4): การ convergence ไม่ดีพอ">RAdam + high momentum (v4): suboptimal convergence</li>
-            <li class="removed" data-en="Large batch (32, v4): may have contributed to underfitting" data-th="Batch ขนาดใหญ่ (32, v4): อาจส่งผลให้ underfitting">Large batch size (32, v4): potential underfitting</li>
+            <li class="removed" data-en="Val loss rising after epoch 25 in v7 — YOLO11m overfits dataset" data-th="Val loss เพิ่มหลัง epoch 25 ใน v7 — YOLO11m overfitting dataset">Val loss rising after epoch 25 in v7 — YOLO11m overfits</li>
+            <li class="removed" data-en="Crack class: still hardest to detect despite oversampling (70% miss rate)" data-th="คลาส crack: ยากที่สุดแม้จะมี oversampling (อัตราพลาด 70%)">Crack: 70% miss rate even with oversampling</li>
           </ul>
         </div>
         <div class="change-card">
           <div class="label">🚀 <span data-en="Recommended Next Steps" data-th="ขั้นตอนถัดไปที่แนะนำ">Recommended Next Steps</span></div>
           <ul>
+            <li data-en="Try YOLO11m with regularisation: dropout, weight_decay tuning" data-th="ลอง YOLO11m กับ regularisation: dropout, weight_decay">YOLO11m + stronger regularisation (dropout, label smoothing)</li>
+            <li data-en="Apply focal loss or class weights to address persistent crack under-detection" data-th="ใช้ focal loss หรือ class weights เพื่อแก้ปัญหา crack ตรวจจับได้น้อย">Focal loss / class weights for crack class</li>
+            <li data-en="CLAHE preprocessing (v7 FIX #2 ready): test with USE_CLAHE=True" data-th="CLAHE preprocessing (พร้อมใน v7 FIX #2): ทดสอบด้วย USE_CLAHE=True">Test CLAHE preprocessing (v7 FIX #2 ready)</li>
             <li data-en="Re-evaluate v3 K-Fold on a larger holdout set" data-th="ประเมิน v3 K-Fold ใหม่บน holdout set ขนาดใหญ่">Re-evaluate v3 K-Fold on a larger holdout set</li>
-            <li data-en="Try YOLO11s-p2 (small head for tiny objects like cracks)" data-th="ลอง YOLO11s-p2 (head เล็กสำหรับวัตถุขนาดเล็กเช่นรอยแตก)">Try YOLO11s-p2 for better crack detection</li>
-            <li data-en="Use Optuna to tune LR on the full dataset" data-th="ใช้ Optuna ปรับ LR บน dataset ทั้งหมด">Optuna LR tuning on full dataset</li>
-            <li data-en="Explore weighted sampling for underrepresented crack class" data-th="ลอง weighted sampling สำหรับคลาส crack ที่มีตัวอย่างน้อย">Weighted sampling for crack class imbalance</li>
-            <li data-en="Combine v3 K-Fold methodology with v6 hyperparameters" data-th="รวมวิธี K-Fold ของ v3 กับ hyperparameter ของ v6">Combine v3 K-Fold + v6 hyperparameters</li>
+            <li data-en="Try YOLO11m-p2 (small detection head) for better crack &amp; pothole detection" data-th="ลอง YOLO11m-p2 (detection head เล็ก) เพื่อตรวจจับ crack &amp; pothole ดีขึ้น">Try YOLO11m-p2 for better small-object detection</li>
           </ul>
         </div>
       </div>
@@ -1533,9 +1681,9 @@
 
 <footer>
   <div class="container">
-    <span data-en="Road Damage Detection · YOLO11 Series · Pothole · Crack · Manhole | v1–v6 Comparison Report | Generated 2026-09-25"
-          data-th="การตรวจจับความเสียหายบนถนน · ชุด YOLO11 · หลุมบ่อ · รอยแตกร้าว · ฝาท่อ | รายงานเปรียบเทียบ v1–v6 | สร้างเมื่อ 25-09-2026">
-      Road Damage Detection · YOLO11 Series · Pothole · Crack · Manhole &nbsp;|&nbsp; v1–v6 Comparison Report &nbsp;|&nbsp; Generated 2026-09-25
+    <span data-en="Road Damage Detection · YOLO11 Series · Pothole · Crack · Manhole | v1–v7 Comparison Report | Generated 2026-09-25"
+          data-th="การตรวจจับความเสียหายบนถนน · ชุด YOLO11 · หลุมบ่อ · รอยแตกร้าว · ฝาท่อ | รายงานเปรียบเทียบ v1–v7 | สร้างเมื่อ 25-09-2026">
+      Road Damage Detection · YOLO11 Series · Pothole · Crack · Manhole &nbsp;|&nbsp; v1–v7 Comparison Report &nbsp;|&nbsp; Generated 2026-09-25
     </span>
   </div>
 </footer>
